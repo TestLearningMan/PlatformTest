@@ -1,0 +1,170 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.platform.testcase.dao.ProductMapper" >
+  <resultMap id="BaseResultMap" type="com.platform.testcase.pojo.Product" >
+    <constructor >
+      <arg column="id" jdbcType="BIGINT" javaType="java.lang.Long" />
+      <arg column="product_name" jdbcType="VARCHAR" javaType="java.lang.String" />
+      <arg column="productman_id" jdbcType="BIGINT" javaType="java.lang.Long" />
+      <arg column="status" jdbcType="INTEGER" javaType="java.lang.Integer" />
+      <arg column="create_time" jdbcType="TIMESTAMP" javaType="java.util.Date" />
+      <arg column="modified_time" jdbcType="TIMESTAMP" javaType="java.util.Date" />
+      <arg column="creator_id" jdbcType="BIGINT" javaType="java.lang.Long" />
+      <arg column="modifier_id" jdbcType="BIGINT" javaType="java.lang.Long" />
+    </constructor>
+  </resultMap>
+  <insert id="insert" parameterType="com.platform.testcase.pojo.Product" >
+    insert into tp_case_product (id, product_name, productman_id,
+      status, create_time, modified_time,
+      creator_id, modifier_id)
+    values (#{id,jdbcType=BIGINT}, #{productName,jdbcType=VARCHAR}, #{productmanId,jdbcType=BIGINT},
+      #{status,jdbcType=INTEGER},now(),now(),
+      #{creatorId,jdbcType=BIGINT}, #{modifierId,jdbcType=BIGINT})
+  </insert>
+  <insert id="insertSelective" parameterType="com.platform.testcase.pojo.Product" >
+    insert into tp_case_product
+    <trim prefix="(" suffix=")" suffixOverrides="," >
+      <if test="id != null" >
+        id,
+      </if>
+      <if test="productName != null" >
+        product_name,
+      </if>
+      <if test="productmanId != null" >
+        productman_id,
+      </if>
+      <if test="status != null" >
+        status,
+      </if>
+      create_time,
+      modified_time,
+      <if test="creatorId != null" >
+        creator_id,
+      </if>
+      <if test="modifierId != null" >
+        modifier_id,
+      </if>
+    </trim>
+    <trim prefix="values (" suffix=")" suffixOverrides="," >
+      <if test="id != null" >
+        #{id,jdbcType=BIGINT},
+      </if>
+      <if test="productName != null" >
+        #{productName,jdbcType=VARCHAR},
+      </if>
+      <if test="productmanId != null" >
+        #{productmanId,jdbcType=BIGINT},
+      </if>
+      <if test="status != null" >
+        #{status,jdbcType=INTEGER},
+      </if>
+      now(),
+      now(),
+      <if test="creatorId != null" >
+        #{creatorId,jdbcType=BIGINT},
+      </if>
+      <if test="modifierId != null" >
+        #{modifierId,jdbcType=BIGINT},
+      </if>
+    </trim>
+  </insert>
+  <sql id="Base_Column_List" >
+    id, product_name, productman_id, status, create_time, modified_time, creator_id, modifier_id
+  </sql>
+  <select id="isExist"  parameterType="String" resultType="int">
+    select
+    count(1)
+    from tp_case_product
+    where product_name = #{productName}
+  </select>
+  <update id="save" parameterType="com.platform.testcase.pojo.Product">
+    update
+    tp_case_product
+    <trim prefix="set" >
+      <if test="productName != null">
+        product_name=#{productName},
+      </if>
+      <if test="productmanId != null">
+        productman_id=#{productmanId},
+      </if>
+      <if test="status != null">
+        status=#{status},
+      </if>
+      modified_time=now(),
+      <if test="modifierId !=null">
+        modifier_id = #{modifierId}
+      </if>
+    </trim>
+    where id=#{productId}
+  </update>
+  <delete id="delete" parameterType="Long" >
+    <if test="productId != null">
+      delete
+      from tp_case_product
+      where id=#{productId}
+    </if>
+  </delete>
+  <delete id="batchDelete" parameterType="java.util.List"  >
+    <if test="productIdList != null">
+      delete
+      from tp_case_product
+      <where>
+        id in
+        <foreach collection="productIdList" separator="," open="(" close=")" index="index" item="item">
+          #{item}
+        </foreach>
+      </where>
+    </if>
+  </delete>
+  <select id="count" resultType="int">
+    select count(1)
+    from tp_case_product p
+    inner join (select id,name from t_platform_user) u
+    on p.productman_id = u.id
+    <trim prefix="where" prefixOverrides="and">
+      <if test="productName != null ">
+        and p.product_name = #{productName}
+      </if>
+      <if test="status != null"> and p.status = #{status} </if>
+      <if test="productman != null"> and u.name = #{productman} </if>
+    </trim>
+  </select>
+  <select id="list" resultType="com.platform.testcase.vo.ProductVo" >
+    select p.id,p.product_name,p.status,u.productman
+    from tp_case_product p
+    inner join (select id,`name` productman from t_platform_user ) u
+    on p.productman_id = u.id
+    <trim prefix="where" prefixOverrides="and">
+      <if  test="id != null">and p.id = #{id} </if>
+      <if  test="productman != null">and u.productman_id = #{productmanId}</if>
+      <if  test="status != null">and p.status = #{status} </if>
+    </trim>
+    order by p.product_name
+    <if  test="offset != null and limit != null" >
+      limit #{offset},#{limit}
+    </if>
+  </select>
+  <update id="disable" parameterType="java.util.List">
+    update tp_case_product
+    set status = 0
+    where
+    <if test="lists != null">
+      id in
+      <foreach collection="lists" separator="," close=")" open="(" index="index" item="item">
+        #{item}
+      </foreach>
+    </if>
+  </update>
+  <update id="enable" parameterType="java.util.List">
+    update tp_case_product
+    set status = 1
+    where
+    <if test="lists != null">
+      id in
+      <foreach collection="lists" separator="," close=")" open="(" index="index" item="item">
+        #{item}
+      </foreach>
+    </if>
+  </update>
+
+</mapper>

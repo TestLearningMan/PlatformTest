@@ -1,0 +1,198 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.platform.testcase.dao.FunctionMapper">
+  <resultMap id="BaseResultMap" type="com.platform.testcase.pojo.Function">
+    <constructor>
+      <idArg column="id" javaType="java.lang.Long" jdbcType="BIGINT" />
+      <arg column="function_name" javaType="java.lang.String" jdbcType="VARCHAR" />
+      <arg column="parent_id" javaType="java.lang.Long" jdbcType="BIGINT" />
+      <arg column="status" javaType="java.lang.Integer" jdbcType="INTEGER" />
+      <arg column="product_id" javaType="java.lang.Long" jdbcType="BIGINT" />
+      <arg column="create_time" javaType="java.util.Date" jdbcType="TIMESTAMP" />
+      <arg column="modified_time" javaType="java.util.Date" jdbcType="TIMESTAMP" />
+      <arg column="creator_id" javaType="java.lang.Long" jdbcType="BIGINT" />
+      <arg column="modifier_id" javaType="java.lang.Long" jdbcType="BIGINT" />
+    </constructor>
+  </resultMap>
+  <sql id="Base_Column_List">
+    id, function_name, parent_id, status, product_id
+  </sql>
+  <select id="selectByPrimaryKey" parameterType="java.lang.Long" resultMap="BaseResultMap">
+    select 
+    <include refid="Base_Column_List" />
+    from tp_case_function
+    where id = #{id,jdbcType=BIGINT}
+  </select>
+  <delete id="deleteByPrimaryKey" parameterType="java.lang.Long">
+    delete from tp_case_function
+    where id = #{id,jdbcType=BIGINT}
+  </delete>
+  <insert id="insert" parameterType="com.platform.testcase.pojo.Function">
+    insert into tp_case_function (id, function_name, parent_id, 
+      status, product_id, create_time, modified_time,
+      creator_id, modifier_id)
+    values (#{id,jdbcType=BIGINT}, #{functionName,jdbcType=VARCHAR}, #{parentId,jdbcType=BIGINT}, 
+      #{status,jdbcType=INTEGER}, #{productId,jdbcType=BIGINT}, #{createTime,jdbcType=TIMESTAMP}, #{modifiedTime,jdbcType=TIMESTAMP},
+      #{creatorId,jdbcType=BIGINT}, #{modifierId,jdbcType=BIGINT})
+  </insert>
+  <insert id="insertSelective" parameterType="com.platform.testcase.pojo.Function">
+    insert into tp_case_function
+    <trim prefix="(" suffix=")" suffixOverrides=",">
+      <if test="id != null">
+        id,
+      </if>
+      <if test="functionName != null">
+        function_name,
+      </if>
+      <if test="parentId != null">
+        parent_id,
+      </if>
+      <if test="status != null">
+        status,
+      </if>
+      <if test="productId != null">
+        product_id,
+      </if>
+      <if test="createTime != null">
+        create_time,
+      </if>
+      <if test="modifiedTime != null">
+        modified_time,
+      </if>
+      <if test="creatorId != null">
+        creator_id,
+      </if>
+      <if test="modifierId != null">
+        modifier_id,
+      </if>
+    </trim>
+    <trim prefix="values (" suffix=")" suffixOverrides=",">
+      <if test="id != null">
+        #{id,jdbcType=BIGINT},
+      </if>
+      <if test="functionName != null">
+        #{functionName,jdbcType=VARCHAR},
+      </if>
+      <if test="parentId != null">
+        #{parentId,jdbcType=BIGINT},
+      </if>
+      <if test="status != null">
+        #{status,jdbcType=INTEGER},
+      </if>
+      <if test="productId != null">
+        #{productId,jdbcType=BIGINT},
+      </if>
+      <if test="createTime != null">
+        #{createTime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="modifiedTime != null">
+        #{modifiedTime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="creatorId != null">
+        #{creatorId,jdbcType=BIGINT},
+      </if>
+      <if test="modifierId != null">
+        #{modifierId,jdbcType=BIGINT},
+      </if>
+    </trim>
+  </insert>
+  <update id="updateByPrimaryKeySelective" parameterType="com.platform.testcase.pojo.Function">
+    update tp_case_function
+    <set>
+      <if test="functionName != null">
+        function_name = #{functionName,jdbcType=VARCHAR},
+      </if>
+      <if test="parentId != null">
+        parent_id = #{parentId,jdbcType=BIGINT},
+      </if>
+      <if test="status != null">
+        status = #{status,jdbcType=INTEGER},
+      </if>
+      <if test="productId != null">
+        product_id =#{productId,jdbcType=BIGINT},
+      </if>
+      <if test="modifierId != null">
+        modifier_id = #{modifierId,jdbcType=BIGINT},
+      </if>
+        modified_time = now()
+    </set>
+    where id = #{id,jdbcType=BIGINT}
+  </update>
+  <update id="updateByPrimaryKey" parameterType="com.platform.testcase.pojo.Function">
+    update tp_case_function
+    set function_name = #{functionName,jdbcType=VARCHAR},
+      parent_id = #{parentId,jdbcType=BIGINT},
+      status = #{status,jdbcType=INTEGER},
+      product_id = #{productId,jdbcType=BIGINT},
+      modified_time = now(),
+      modifier_id = #{modifierId,jdbcType=BIGINT}
+    where id = #{id,jdbcType=BIGINT}
+  </update>
+  <select id="isExist" >
+    select count(1)
+    from tp_case_function
+    where function_name = #{name}
+  </select>
+  <delete id="delete" parameterType="java.util.List">
+    <if test="idList != null">
+    delete from tp_case_function
+    <trim prefix="where" >
+        id in
+      <foreach collection="idList" item="item" close=")" separator="," open="(" >
+        #{item}
+      </foreach>
+    </trim>
+    </if>
+  </delete>
+  <!--  <update id="enable" parameterType="java.util.List">
+    update tp_case_function
+    set status = 1
+    where id in
+    <if test="idList != null">
+      <foreach collection="idList" open="(" close=")" separator="," item="item">
+        #{item}
+      </foreach>
+    </if>
+  </update>-->
+  <!--<update id="disable" parameterType="java.util.List">
+    update tp_case_function
+    set status = 0
+    where id in
+    <if test="idList != null">
+      <foreach collection="idList" open="(" close=")" separator="," item="item">
+        #{item}
+      </foreach>
+    </if>
+  </update> -->
+  <update id="forbidden" parameterType="java.util.List">
+    update tp_case_function
+    <if test="status == 1">
+      set status = #{status}
+      where FIND_IN_SET(id,getChiListById(#{ids},0))
+    </if>
+    <if test="status ==0 ">
+      set status = #{status}
+      where FIND_IN_SET(id,getChiListById(#{ids},1))
+    </if>
+
+  </update>
+  <select id="list" parameterType="java.util.Map" resultType="com.platform.testcase.pojo.Function">
+    select
+    <include refid="Base_Column_List" />
+    from tp_case_function
+    <trim prefix="where" prefixOverrides="and">
+      <if test="id != null">
+            id = #{id}
+      </if>
+      <if test="functionName != null ">
+        and function_name = #{functionName}
+      </if>
+      <if test="status != null">
+        and status = #{status}
+      </if>
+      <if test="productId != null">
+        and product_id = #{productId,jdbcType=BIGINT}
+      </if>
+    </trim>
+  </select>
+</mapper>

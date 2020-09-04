@@ -1,0 +1,185 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.platform.testcase.dao.TeamMapper">
+  <resultMap id="BaseResultMap" type="com.platform.testcase.pojo.Team">
+    <constructor>
+      <idArg column="id" javaType="java.lang.Long" jdbcType="BIGINT" />
+      <arg column="team_name" javaType="java.lang.String" jdbcType="VARCHAR" />
+      <arg column="status" javaType="java.lang.Boolean" jdbcType="BIT" />
+      <arg column="create_time" javaType="java.util.Date" jdbcType="TIMESTAMP" />
+      <arg column="modified_time" javaType="java.util.Date" jdbcType="TIMESTAMP" />
+      <arg column="creator_id" javaType="java.lang.Long" jdbcType="BIGINT" />
+      <arg column="modifier_id" javaType="java.lang.Long" jdbcType="BIGINT" />
+    </constructor>
+  </resultMap>
+  <sql id="Base_Column_List">
+    id, team_name, status, create_time, modified_time, creator_id, modifier_id
+  </sql>
+  <select id="selectByPrimaryKey" parameterType="java.lang.Long" resultMap="BaseResultMap">
+    select 
+    <include refid="Base_Column_List" />
+    from tp_case_team
+    where id = #{id,jdbcType=BIGINT}
+  </select>
+  <delete id="deleteByPrimaryKey" parameterType="java.lang.Long">
+    delete from tp_case_team
+    where id = #{id,jdbcType=BIGINT}
+  </delete>
+  <insert id="insert" parameterType="com.platform.testcase.pojo.Team">
+    insert into tp_case_team (id, team_name, status, 
+      create_time, modified_time, creator_id, 
+      modifier_id)
+    values (#{id,jdbcType=BIGINT}, #{teamName,jdbcType=VARCHAR}, #{status,jdbcType=BIT},
+    now(),now(), #{creatorId,jdbcType=BIGINT}, #{modifierId,jdbcType=BIGINT})
+  </insert>
+  <insert id="insertSelective" parameterType="com.platform.testcase.pojo.Team">
+    insert into tp_case_team
+    <trim prefix="(" suffix=")" suffixOverrides=",">
+      <if test="id != null">
+        id,
+      </if>
+      <if test="teamName != null">
+        team_name,
+      </if>
+      <if test="status != null">
+        status,
+      </if>
+      <if test="createTime != null">
+        create_time,
+      </if>
+      <if test="modifiedTime != null">
+        modified_time,
+      </if>
+      <if test="creatorId != null">
+        creator_id,
+      </if>
+      <if test="modifierId != null">
+        modifier_id,
+      </if>
+    </trim>
+    <trim prefix="values (" suffix=")" suffixOverrides=",">
+      <if test="id != null">
+        #{id,jdbcType=BIGINT},
+      </if>
+      <if test="teamName != null">
+        #{teamName,jdbcType=VARCHAR},
+      </if>
+      <if test="status != null">
+        #{status,jdbcType=BIT},
+      </if>
+      now(),
+      now(),
+      <if test="creatorId != null">
+        #{creatorId,jdbcType=BIGINT},
+      </if>
+      <if test="modifierId != null">
+        #{modifierId,jdbcType=BIGINT},
+      </if>
+    </trim>
+  </insert>
+  <update id="updateByPrimaryKeySelective" parameterType="com.platform.testcase.pojo.Team">
+    update tp_case_team
+    <set>
+      <if test="teamName != null">
+        team_name = #{teamName,jdbcType=VARCHAR},
+      </if>
+      <if test="status != null">
+        status = #{status,jdbcType=BIT},
+      </if>
+      <if test="createTime != null">
+        create_time = #{createTime,jdbcType=TIMESTAMP},
+      </if>
+      now(),
+      <if test="creatorId != null">
+        creator_id = #{creatorId,jdbcType=BIGINT},
+      </if>
+      <if test="modifierId != null">
+        modifier_id = #{modifierId,jdbcType=BIGINT},
+      </if>
+    </set>
+    where id = #{id,jdbcType=BIGINT}
+  </update>
+  <update id="updateByPrimaryKey" parameterType="com.platform.testcase.pojo.Team">
+    update tp_case_team
+    set team_name = #{teamName,jdbcType=VARCHAR},
+      status = #{status,jdbcType=BIT},
+      create_time = #{createTime,jdbcType=TIMESTAMP},
+      modified_time = now(),
+      creator_id = #{creatorId,jdbcType=BIGINT},
+      modifier_id = #{modifierId,jdbcType=BIGINT}
+    where id = #{id,jdbcType=BIGINT}
+  </update>
+  <select id="isExist" resultType="int" parameterType="String">
+    select count(1)
+    from tp_case_team
+    where team_name = #{teamName}
+  </select>
+  <delete id="delete" parameterType="java.util.List">
+    <if test="idList != null">
+        delete from tp_case_team
+        <where>
+            id in
+                <foreach collection="idList" separator="," close=")" open="("  index="index" item="item">
+                  #{item}
+                </foreach>
+        </where>
+    </if>
+  </delete>
+  <select id="count" parameterType="java.util.Map">
+    select count(1)
+    from tp_case_team
+    <trim prefix="where" suffixOverrides="and">
+      <if test="id != null">
+        id = #{id} and
+      </if>
+      <if test="teamName != null" >
+        team_name = #{teamName} and
+      </if>
+      <if test="status != null">
+        status = #{status} and
+      </if>
+    </trim>
+  </select>
+  <select id="list" parameterType="java.util.Map" resultType="com.platform.testcase.vo.TeamVo">
+    select id,team_name,status
+    from tp_case_team
+    <trim prefix="where" suffixOverrides="and">
+      <if test="id !=null">
+        id = #{id} and
+      </if>
+      <if test="teamName != null">
+        team_name = #{teamName} and
+      </if>
+      <if test="status">
+        status = #{status} and
+      </if>
+      order by team_name
+      <if test="limit != null and offset != null" >
+      limit #{limit},#{offset}
+      </if>
+    </trim>
+  </select>
+  <update id="disable" parameterType="java.util.List">
+    update tp_case_team
+      set status = 0
+    where
+      <if test="lists != null">
+        id in
+        <foreach collection="lists" item="item" index="index" open="(" close=")" separator=",">
+          #{item}
+        </foreach>
+      </if>
+  </update>
+  <update id="enable" parameterType="java.util.List">
+    update tp_case_team
+    set status = 1
+    where
+    <if test="lists != null">
+      id in
+      <foreach collection="lists" item="item" index="index" open="(" close=")" separator=",">
+        #{item}
+      </foreach>
+    </if>
+  </update>
+
+</mapper>

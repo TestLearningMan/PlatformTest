@@ -1,0 +1,214 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.platform.testcase.dao.ListMapper">
+  <resultMap id="BaseResultMap" type="com.platform.testcase.pojo.List">
+    <constructor>
+      <idArg column="id" javaType="java.lang.Long" jdbcType="BIGINT" />
+      <arg column="product_id" javaType="java.lang.Long" jdbcType="BIGINT" />
+      <arg column="list_name" javaType="java.lang.String" jdbcType="VARCHAR" />
+      <arg column="status" javaType="java.lang.Integer" jdbcType="INTEGER" />
+      <arg column="charge_id" javaType="java.lang.Long" jdbcType="BIGINT" />
+      <arg column="team_id" javaType="java.lang.Long" jdbcType="BIGINT" />
+      <arg column="begin_date" javaType="java.util.Date" jdbcType="TIMESTAMP" />
+      <arg column="end_date" javaType="java.util.Date" jdbcType="TIMESTAMP" />
+      <arg column="unittest_list_id" javaType="java.lang.Long" jdbcType="BIGINT" />
+      <arg column="apitest_list_id" javaType="java.lang.Long" jdbcType="BIGINT" />
+      <arg column="uitest_list_id" javaType="java.lang.Long" jdbcType="BIGINT" />
+      <arg column="create_time" javaType="java.util.Date" jdbcType="TIMESTAMP" />
+      <arg column="modified_time" javaType="java.util.Date" jdbcType="TIMESTAMP" />
+      <arg column="creator_id" javaType="java.lang.Long" jdbcType="BIGINT" />
+      <arg column="modifier_id" javaType="java.lang.Long" jdbcType="BIGINT" />
+    </constructor>
+  </resultMap>
+  <sql id="Base_Column_List">
+    id, product_id, list_name, status, charge_id, team_id, begin_date, end_date, unittest_list_id, 
+    apitest_list_id, uitest_list_id, create_time, modified_time, creator_id, modifier_id
+  </sql>
+  <select id="selectByPrimaryKey" parameterType="java.lang.Long" resultMap="BaseResultMap">
+    select 
+    <include refid="Base_Column_List" />
+    from tp_case_list
+    where id = #{id,jdbcType=BIGINT}
+  </select>
+  <delete id="deleteByPrimaryKey" parameterType="java.lang.Long">
+    delete from tp_case_list
+    where id = #{id,jdbcType=BIGINT}
+  </delete>
+  <insert id="insert" parameterType="com.platform.testcase.pojo.List">
+    insert into tp_case_list (id, product_id, list_name, 
+      status, charge_id, team_id, 
+      begin_date, end_date, unittest_list_id, 
+      apitest_list_id, uitest_list_id, create_time, 
+      modified_time, creator_id, modifier_id
+      )
+    values (#{id,jdbcType=BIGINT}, #{productId,jdbcType=BIGINT}, #{listName,jdbcType=VARCHAR}, 
+      #{status,jdbcType=INTEGER}, #{chargeId,jdbcType=BIGINT}, #{teamId,jdbcType=BIGINT}, 
+      #{beginDate,jdbcType=TIMESTAMP}, #{endDate,jdbcType=TIMESTAMP}, #{unittestListId,jdbcType=BIGINT}, 
+      #{apitestListId,jdbcType=BIGINT}, #{uitestListId,jdbcType=BIGINT}, #{createTime,jdbcType=TIMESTAMP}, 
+      #{modifiedTime,jdbcType=TIMESTAMP}, #{creatorId,jdbcType=BIGINT}, #{modifierId,jdbcType=BIGINT}
+      )
+  </insert>
+  <insert id="insertSelective" parameterType="com.platform.testcase.pojo.List">
+    insert into tp_case_list
+    <trim prefix="(" suffix=")" suffixOverrides=",">
+      <if test="id != null">
+        id,
+      </if>
+      <if test="productId != null">
+        product_id,
+      </if>
+      <if test="listName != null">
+        list_name,
+      </if>
+      <if test="status != null">
+        status,
+      </if>
+      <if test="chargeId != null">
+        charge_id,
+      </if>
+      <if test="teamId != null">
+        team_id,
+      </if>
+      <if test="beginDate != null">
+        begin_date,
+      </if>
+      <if test="endDate != null">
+        end_date,
+      </if>
+      <if test="unittestListId != null">
+        unittest_list_id,
+      </if>
+      <if test="apitestListId != null">
+        apitest_list_id,
+      </if>
+      <if test="uitestListId != null">
+        uitest_list_id,
+      </if>
+      <if test="createTime != null">
+        create_time,
+      </if>
+      <if test="modifiedTime != null">
+        modified_time,
+      </if>
+      <if test="creatorId != null">
+        creator_id,
+      </if>
+      <if test="modifierId != null">
+        modifier_id,
+      </if>
+    </trim>
+    <trim prefix="values (" suffix=")" suffixOverrides=",">
+      <if test="id != null">
+        #{id,jdbcType=BIGINT},
+      </if>
+      <if test="productId != null">
+        #{productId,jdbcType=BIGINT},
+      </if>
+      <if test="listName != null">
+        #{listName,jdbcType=VARCHAR},
+      </if>
+      <if test="status != null">
+        #{status,jdbcType=INTEGER},
+      </if>
+      <if test="chargeId != null">
+        #{chargeId,jdbcType=BIGINT},
+      </if>
+      <if test="teamId != null">
+        #{teamId,jdbcType=BIGINT},
+      </if>
+      <if test="beginDate != null">
+        #{beginDate,jdbcType=TIMESTAMP},
+      </if>
+      <if test="endDate != null">
+        #{endDate,jdbcType=TIMESTAMP},
+      </if>
+      <if test="unittestListId != null">
+        #{unittestListId,jdbcType=BIGINT},
+      </if>
+      <if test="apitestListId != null">
+        #{apitestListId,jdbcType=BIGINT},
+      </if>
+      <if test="uitestListId != null">
+        #{uitestListId,jdbcType=BIGINT},
+      </if>
+      <if test="createTime != null">
+        #{createTime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="modifiedTime != null">
+        #{modifiedTime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="creatorId != null">
+        #{creatorId,jdbcType=BIGINT},
+      </if>
+      <if test="modifierId != null">
+        #{modifierId,jdbcType=BIGINT},
+      </if>
+    </trim>
+  </insert>
+  <update id="updateByPrimaryKeySelective" parameterType="com.platform.testcase.pojo.List">
+    update tp_case_list
+    <set>
+      <if test="productId != null">
+        product_id = #{productId,jdbcType=BIGINT},
+      </if>
+      <if test="listName != null">
+        list_name = #{listName,jdbcType=VARCHAR},
+      </if>
+      <if test="status != null">
+        status = #{status,jdbcType=INTEGER},
+      </if>
+      <if test="chargeId != null">
+        charge_id = #{chargeId,jdbcType=BIGINT},
+      </if>
+      <if test="teamId != null">
+        team_id = #{teamId,jdbcType=BIGINT},
+      </if>
+      <if test="beginDate != null">
+        begin_date = #{beginDate,jdbcType=TIMESTAMP},
+      </if>
+      <if test="endDate != null">
+        end_date = #{endDate,jdbcType=TIMESTAMP},
+      </if>
+      <if test="unittestListId != null">
+        unittest_list_id = #{unittestListId,jdbcType=BIGINT},
+      </if>
+      <if test="apitestListId != null">
+        apitest_list_id = #{apitestListId,jdbcType=BIGINT},
+      </if>
+      <if test="uitestListId != null">
+        uitest_list_id = #{uitestListId,jdbcType=BIGINT},
+      </if>
+      <if test="createTime != null">
+        create_time = #{createTime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="modifiedTime != null">
+        modified_time = #{modifiedTime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="creatorId != null">
+        creator_id = #{creatorId,jdbcType=BIGINT},
+      </if>
+      <if test="modifierId != null">
+        modifier_id = #{modifierId,jdbcType=BIGINT},
+      </if>
+    </set>
+    where id = #{id,jdbcType=BIGINT}
+  </update>
+  <update id="updateByPrimaryKey" parameterType="com.platform.testcase.pojo.List">
+    update tp_case_list
+    set product_id = #{productId,jdbcType=BIGINT},
+      list_name = #{listName,jdbcType=VARCHAR},
+      status = #{status,jdbcType=INTEGER},
+      charge_id = #{chargeId,jdbcType=BIGINT},
+      team_id = #{teamId,jdbcType=BIGINT},
+      begin_date = #{beginDate,jdbcType=TIMESTAMP},
+      end_date = #{endDate,jdbcType=TIMESTAMP},
+      unittest_list_id = #{unittestListId,jdbcType=BIGINT},
+      apitest_list_id = #{apitestListId,jdbcType=BIGINT},
+      uitest_list_id = #{uitestListId,jdbcType=BIGINT},
+      create_time = #{createTime,jdbcType=TIMESTAMP},
+      modified_time = #{modifiedTime,jdbcType=TIMESTAMP},
+      creator_id = #{creatorId,jdbcType=BIGINT},
+      modifier_id = #{modifierId,jdbcType=BIGINT}
+    where id = #{id,jdbcType=BIGINT}
+  </update>
+</mapper>
