@@ -43,7 +43,7 @@ public class CaseDetailController {
             return R.error("请选择需要删除的测试用例");
         }
         List<Long> idList = BaseTypeUtils.strToLong(Splitter.on(",").splitToList(ids));
-
+    return  null;
     }
 
 
