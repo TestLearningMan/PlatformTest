@@ -29,7 +29,9 @@ public class TestDemo {
 
     @Test
     public void test() {
-        int random = (int)((Math.random()+8)*Math.pow(10, Math.random()*10));
+
+        int random = 0 ;
+        System.out.print(random);
     }
 
     @Test

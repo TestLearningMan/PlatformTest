@@ -1,0 +1,31 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.platform.testcase.dao.ListRelateProMapper" >
+    <resultMap id="BaseResultMap" type="com.platform.testcase.pojo.ListRelatePro" >
+        <constructor >
+            <arg column="list_id" jdbcType="BIGINT" javaType="java.lang.Long" />
+            <arg column="product_id" jdbcType="BIGINT" javaType="java.lang.Long" />
+        </constructor>
+    </resultMap>
+    <insert id="insert" parameterType="com.platform.testcase.pojo.ListRelatePro" >
+    insert into tp_case_listrelatepro (list_id,product_id )
+    values
+    <foreach collection="productIds" item="item" separator=",">
+        (#{list_id,jdbcType=BIGINT},#{item,jdbcType=BIGINT} )
+    </foreach>
+  </insert>
+    <delete id="delete" parameterType="Long" >
+        delete from tp_case_product
+        where list_id=#{listId}
+    </delete>
+    <select id="list" resultType="com.platform.testcase.pojo.ListRelatePro" >
+        select list_id,product_id
+        from tp_case_listrelatepro
+        <where>
+            <if test="listId > 0">
+                list_id = #{list_id}
+            </if>
+        </where>
+
+    </select>
+</mapper>
