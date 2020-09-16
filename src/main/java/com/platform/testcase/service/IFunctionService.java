@@ -8,7 +8,6 @@ import java.util.Map;
 
 public interface IFunctionService {
     public R save(Function function);
-    public R delete(List<Long> idList);
     public void forbidden(Map<String,Object> map);
     public List<Function> list(Map<String,Object> map);
 }

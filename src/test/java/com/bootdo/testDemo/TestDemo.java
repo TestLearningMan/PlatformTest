@@ -19,6 +19,7 @@ import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.data.redis.core.RedisTemplate;
 import org.springframework.test.context.junit4.SpringRunner;
 import org.springframework.web.bind.annotation.RestController;
+import org.thymeleaf.util.ListUtils;
 
 import java.util.*;
 
@@ -29,9 +30,11 @@ public class TestDemo {
 
     @Test
     public void test() {
-
-        int random = 0 ;
-        System.out.print(random);
+        List<String> list = new ArrayList<String>();
+        list.add("第一个");
+        list.add("第二个");
+        delete(list);
+        System.out.print(list.size());
     }
 
     @Test
@@ -39,4 +42,8 @@ public class TestDemo {
         CaseDetail caseDetail = new CaseDetail();
     }
 
+
+    private void delete(List<String> list ){
+        list.remove(1);
+    }
 }

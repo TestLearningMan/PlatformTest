@@ -29,15 +29,6 @@ public class ProductController {
         return iProductService.save(product);
     }
 
-    @RequestMapping(value = "/delete.do",method = RequestMethod.POST)
-    @ResponseBody
-    public R deleteProduct(Long id){
-        if (null == id || id == 0 ){
-            R.error(-1,"前端参数传递错误，请刷新页面后，重新操作");
-        }
-        return iProductService.delete(id);
-    }
-
     @RequestMapping(value = "/batchDelete.do")
     @ResponseBody
     public R batchDelete(String productIds){

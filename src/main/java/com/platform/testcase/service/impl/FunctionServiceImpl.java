@@ -33,13 +33,7 @@ public class FunctionServiceImpl implements IFunctionService {
         }
         return R.error("功能保存失败");
     }
-    public R delete(List<Long> idList){
-        int result = functionMapper.delete(idList);
-        if ( result ==0){
-            return R.error("删除功能失败");
-        }
-        return R.ok("成功删除"+result+"条功能");
-    }
+
     public void forbidden(Map<String,Object> map){
         functionMapper.forbidden(map);
     }
@@ -47,4 +41,9 @@ public class FunctionServiceImpl implements IFunctionService {
         List<Function> lists= functionMapper.list(map);
         return lists;
     }
+
+
+
+
+
 }

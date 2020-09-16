@@ -1,14 +1,20 @@
 package com.platform.testcase.service.impl;
 
 import com.google.common.base.Splitter;
+import com.platform.testcase.handler.AssociateResultHandler;
 import com.platform.testcase.dao.ProductMapper;
+import com.platform.testcase.pojo.AssociateResult;
 import com.platform.testcase.pojo.Product;
 import com.platform.testcase.service.IProductService;
+import com.platform.testcase.utils.BaseTypeUtils;
 import com.platform.testcase.utils.IdGenerator;
 import com.platform.testcase.vo.ProductVo;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import com.bootdo.common.utils.*;
+
+import java.util.ArrayList;
+import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
 
@@ -44,24 +50,20 @@ public class ProductServiceImpl implements IProductService {
             }
         }
 
-    public R delete(Long id){
-        int result=productMapper.delete(id);
-        if (result > 0){
-            return R.ok("删除产品成功");
-        }
-        return R.error("此产品已被删除，请勿重复操作");
-    }
 
     public R batchDelete(String productIds){
-        List<String> productIdList = Splitter.on(",").splitToList(productIds);
-        if (productIdList.size() == 0){
-            return R.error("请刷新页面，重新选择要删除的产品");
-        }
-
-        int result=productMapper.batchDelete(productIdList);
-        if (result > 0){
-            return R.ok("批量删除产品成功");}
-        return R.error("所选产品已被删除，请勿重复操作");
+        List<String> IdListStr = Splitter.on(",").splitToList(productIds);
+        List<Long> productIdList= BaseTypeUtils.strToLong(IdListStr);
+        int totalNum = productIdList.size();
+        String errMsg = checkAssociation(productIdList);
+        int successNum = productIdList.size();
+        int failNum = totalNum - successNum;
+        StringBuilder msg = new StringBuilder();
+        msg.append("操作成功\n").append("成功删除产品").append(successNum)
+                .append("个\n").append(failNum).append("个产品删除失败,")
+                .append(errMsg);
+        productMapper.batchDelete(productIdList);
+        return R.ok(errMsg.toString());
     }
 
     public List<ProductVo> list(Map<String,Object> query){
@@ -93,4 +95,31 @@ public class ProductServiceImpl implements IProductService {
 
     }
 
+    private String checkAssociation(List<Long> idList){
+        List<AssociateResult> resultList= productMapper.checkAssociated(idList);
+        if (resultList == null || resultList.size() == 0){
+            return "";
+        }
+        StringBuilder errMsg=new StringBuilder();
+        errMsg.append("失败原因如下:\n");
+        for(AssociateResult result : resultList) {
+            Long id = result.getId();
+            idList.remove(id);
+            switch (result.getType()){
+                case "6501":
+                    errMsg.append(result.getName()).append("已关联测试用例，删除失败;\n");
+                    break;
+                case "6502":
+                    errMsg.append(result.getName()).append("已关联子功能，删除失败;\n");
+                    break;
+                case "6503":
+                    errMsg.append(result.getName()).append("已关联测试用例集，删除失败;\n");
+                    break;
+                default:
+                    errMsg.append(result.getName()).append("已关联其他业务，删除失败;\n");
+            }
+        }
+
+        return errMsg.toString();
+    }
 }

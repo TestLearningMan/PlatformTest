@@ -36,14 +36,7 @@ public class FunctionController {
         function.setCreatorId(ShiroUtils.getUserId());
         return functionService.save(function);
     }
-    public R delete(String ids){
-        if (StringUtils.isBlank(ids)){
-            return R.error("请选择需要删除的功能");
-        }
-        List<String> list = Splitter.on(",").splitToList(ids);
-        List<Long> idList = strToLong(list);
-        return functionService.delete(idList);
-    }
+
     public R forbidden(Map<String,Object> map){
         if (null == map.get("ids") || StringUtils.isBlank(map.get("ids").toString())){
             return R.error("请选择需要禁用/启用的功能");

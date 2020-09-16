@@ -13,6 +13,13 @@
       <arg column="modifier_id" jdbcType="BIGINT" javaType="java.lang.Long" />
     </constructor>
   </resultMap>
+  <resultMap id="AssociateResultMap" type="com.platform.testcase.pojo.AssociateResult" >
+    <constructor >
+      <arg column="product_id" jdbcType="BIGINT" javaType="java.lang.Long" />
+      <arg column="type" jdbcType="varchar" javaType="java.lang.String" />
+      <arg column="product_name" jdbcType="varchar" javaType="java.lang.String"/>
+    </constructor>
+  </resultMap>
   <insert id="insert" parameterType="com.platform.testcase.pojo.Product" >
     insert into tp_case_product (id, product_name, productman_id,
       status, create_time, modified_time,
@@ -97,13 +104,6 @@
     </trim>
     where id=#{productId}
   </update>
-  <delete id="delete" parameterType="Long" >
-    <if test="productId != null">
-      delete
-      from tp_case_product
-      where id=#{productId}
-    </if>
-  </delete>
   <delete id="batchDelete" parameterType="java.util.List"  >
     <if test="productIdList != null">
       delete
@@ -144,6 +144,50 @@
       limit #{offset},#{limit}
     </if>
   </select>
+  <select id="checkAssociated" resultMap="AssociateResultMap" >
+    select r.product_id,r.type,p.product_name
+    (SELECT DISTINCT
+    product_id,
+    '6501' type
+    FROM
+    tp_case_casedetail
+    <trim prefix="where">
+      <if test="idList != null">
+        product_id in
+        <foreach collection="idList" item="item" separator="," close=")" open="(">
+          #{item}
+        </foreach>
+      </if>
+    </trim>
+    union
+    SELECT DISTINCT
+    product_id,
+    '6502' type
+    FROM
+    tp_case_function
+    <trim prefix="where">
+      <if test="idList != null">
+        product_id in
+        <foreach collection="idList" open="(" close=")" separator="," item="item">
+          #{item}
+        </foreach>
+      </if>
+    </trim>
+    UNION
+    SELECT DISTINCT
+    product_id,
+    '6503' type
+    FROM
+    tp_case_listrelatepro
+    <trim>
+      <if test="idList != null">
+        product_id in
+        <foreach collection="idList" open="(" close=")" separator="," item="item">#{item}
+        </foreach
+        >
+      </if>
+    </trim>) r left join tp_case_product p on r.product_id = p.id
+  </select>
   <update id="disable" parameterType="java.util.List">
     update tp_case_product
     set status = 0
@@ -166,5 +210,4 @@
       </foreach>
     </if>
   </update>
-
 </mapper>

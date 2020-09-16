@@ -1,5 +1,6 @@
 package com.platform.testcase.dao;
 
+import com.platform.testcase.pojo.AssociateResult;
 import com.platform.testcase.pojo.Product;
 import com.platform.testcase.vo.ProductVo;
 
@@ -15,9 +16,7 @@ public interface ProductMapper {
 
     int save(Product product);
 
-    int delete(Long id);
-
-    int batchDelete(List<String> productIdList);
+    int batchDelete(List<Long> productIdList);
 
     int count(Map<String,Object> map);
 
@@ -26,6 +25,7 @@ public interface ProductMapper {
     int disable(List<Long> lists);
 
     int enable(List<Long> lists);
+    List<AssociateResult> checkAssociated(List<Long> idList);
 
 
 }

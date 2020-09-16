@@ -21,8 +21,6 @@ public interface FunctionMapper {
 
     int isExist(String functionName);
 
-    int delete(List<Long> idList);
-
     int forbidden(Map<String,Object> map);
 
     List<Function> list(Map<String, Object> map);
