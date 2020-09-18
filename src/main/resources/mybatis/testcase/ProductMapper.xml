@@ -16,8 +16,8 @@
   <resultMap id="AssociateResultMap" type="com.platform.testcase.pojo.AssociateResult" >
     <constructor >
       <arg column="product_id" jdbcType="BIGINT" javaType="java.lang.Long" />
-      <arg column="type" jdbcType="varchar" javaType="java.lang.String" />
-      <arg column="product_name" jdbcType="varchar" javaType="java.lang.String"/>
+      <arg column="type" jdbcType="VARCHAR" javaType="java.lang.String" />
+      <arg column="product_name" jdbcType="VARCHAR" javaType="java.lang.String"/>
     </constructor>
   </resultMap>
   <insert id="insert" parameterType="com.platform.testcase.pojo.Product" >

@@ -31,11 +31,11 @@ public class ProductController {
 
     @RequestMapping(value = "/batchDelete.do")
     @ResponseBody
-    public R batchDelete(String productIds){
-        if (StringUtils.isBlank(productIds)){
-            R.error(-1,"请先选择需要删除的产品");
+    public R batchDelete(String ids){
+        if (StringUtils.isBlank(ids)){
+            return R.error(-1,"请先选择需要删除的产品");
         }
-        return iProductService.batchDelete(productIds);
+        return iProductService.batchDelete(ids);
     }
 
     @RequestMapping(value = "/list.do")
