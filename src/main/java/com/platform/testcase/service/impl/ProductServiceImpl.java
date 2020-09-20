@@ -62,7 +62,9 @@ public class ProductServiceImpl implements IProductService {
         msg.append("操作成功\n").append("成功删除产品").append(successNum)
                 .append("个\n").append(failNum).append("个产品删除失败,")
                 .append(errMsg);
-        productMapper.batchDelete(productIdList);
+        if (successNum != 0){
+            productMapper.batchDelete(productIdList);
+        }
         return R.ok(errMsg.toString());
     }
 
@@ -76,23 +78,8 @@ public class ProductServiceImpl implements IProductService {
     }
 
     public R forbidden(List<Long> lists,int type){
-        int result = 0;
-        //禁用/启用调用不同的方法
-        switch (type){
-            case 0:
-                result=productMapper.disable(lists);
-                break;
-            case 1:
-                result=productMapper.enable(lists);
-                break;
-            default:
-                return R.error("前端传参错误，请重新进行禁用/启用操作");
-        }
-        if (result == 0){
-            return R.error("所选团队状态已被全部更新,请重新选择需要禁用/启用的团队");
-        }
+        productMapper.forbidden(lists,type);
         return R.ok("团队状态更新成功");
-
     }
 
     private String checkAssociation(List<Long> idList){

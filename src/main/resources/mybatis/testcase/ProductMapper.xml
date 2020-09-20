@@ -144,8 +144,9 @@
       limit #{offset},#{limit}
     </if>
   </select>
-  <select id="checkAssociated" resultMap="AssociateResultMap" >
+  <select id="checkAssociated" parameterType="java.util.List" resultMap="AssociateResultMap" >
     select r.product_id,r.type,p.product_name
+    from
     (SELECT DISTINCT
     product_id,
     '6501' type
@@ -179,29 +180,23 @@
     '6503' type
     FROM
     tp_case_listrelatepro
-    <trim>
+    <trim prefix="where">
       <if test="idList != null">
         product_id in
-        <foreach collection="idList" open="(" close=")" separator="," item="item">#{item}
-        </foreach
-        >
+        <foreach collection="idList" open="(" close=")" separator="," item="item">
+            #{item}
+        </foreach>
       </if>
-    </trim>) r left join tp_case_product p on r.product_id = p.id
+    </trim>) r LEFT join tp_case_product p on r.product_id = p.id
   </select>
-  <update id="disable" parameterType="java.util.List">
+  <update id="forbidden" >
     update tp_case_product
-    set status = 0
-    where
-    <if test="lists != null">
-      id in
-      <foreach collection="lists" separator="," close=")" open="(" index="index" item="item">
-        #{item}
-      </foreach>
+    <if test="type == 0">
+      set status = 0
     </if>
-  </update>
-  <update id="enable" parameterType="java.util.List">
-    update tp_case_product
-    set status = 1
+    <if test="type == 1">
+      set status = 1
+    </if>
     where
     <if test="lists != null">
       id in

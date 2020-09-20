@@ -14,6 +14,13 @@
       <arg column="modifier_id" javaType="java.lang.Long" jdbcType="BIGINT" />
     </constructor>
   </resultMap>
+  <resultMap id="AssociateResultMap" type="com.platform.testcase.pojo.AssociateResult">
+    <constructor>
+      <arg column="id"  javaType="java.lang.Long" jdbcType="BIGINT" />
+      <arg column="type" javaType="java.lang.String" jdbcType="VARCHAR" />
+      <arg column="name" javaType="java.lang.String" jdbcType="VARCHAR" />
+    </constructor>
+  </resultMap>
   <sql id="Base_Column_List">
     id, function_name, parent_id, status, product_id
   </sql>
@@ -129,37 +136,12 @@
     from tp_case_function
     where function_name = #{name}
   </select>
-  <delete id="delete" parameterType="java.util.List">
-    <if test="idList != null">
+  <delete id="deleteByPrimaryKey" parameterType="java.lang.Long">
     delete from tp_case_function
-    <trim prefix="where" >
-        id in
-      <foreach collection="idList" item="item" close=")" separator="," open="(" >
-        #{item}
-      </foreach>
-    </trim>
-    </if>
+    <where>
+        id  = #{id}
+    </where>
   </delete>
-  <!--  <update id="enable" parameterType="java.util.List">
-    update tp_case_function
-    set status = 1
-    where id in
-    <if test="idList != null">
-      <foreach collection="idList" open="(" close=")" separator="," item="item">
-        #{item}
-      </foreach>
-    </if>
-  </update>-->
-  <!--<update id="disable" parameterType="java.util.List">
-    update tp_case_function
-    set status = 0
-    where id in
-    <if test="idList != null">
-      <foreach collection="idList" open="(" close=")" separator="," item="item">
-        #{item}
-      </foreach>
-    </if>
-  </update> -->
   <update id="forbidden" parameterType="java.util.List">
     update tp_case_function
     <if test="status == 1">
@@ -173,6 +155,7 @@
 
   </update>
   <select id="list" parameterType="java.util.Map" resultType="com.platform.testcase.pojo.Function">
+    <!--功能菜单的列表，只要把符合条件的子节点查出来即可，不需要显示上级、下级功能><-->
     select
     <include refid="Base_Column_List" />
     from tp_case_function
@@ -191,4 +174,40 @@
       </if>
     </trim>
   </select>
+  <select id="checkAssociated" parameterType="java.lang.Long" resultMap="AssociateResultMap" >
+    <!--> 查找出关联的测试用例<-->
+    SELECT
+    DISTINCT count(1) id,'6501' type,'关联的测试用例' name
+    FROM
+    tp_case_casedetail
+    <trim prefix="where">
+      <if test="id != 0">
+        function_id = #{id}
+      </if>
+    </trim>
+    union
+    <!--> 查找出关联的子功能的数量<-->
+    select
+    count(1) id , '6504' type,'关联的子功能' function_name
+    from
+    tp_case_function
+    <where>
+      <if test="id != 0">
+        FIND_IN_SET(id,getChiListById(#{id},-1))>0
+      </if>
+    </where>
+  </select>
+  <select id = "hasSubFunction" parameterType="java.lang.Long">
+    select count(1)
+    from
+    tp_case_function
+    <where>
+    <if test="id != 0">
+      FIND_IN_SET(id,getChiListById(#{id},-1))>0;
+    </if>
+    </where>
+  </select>
+
+
+
 </mapper>

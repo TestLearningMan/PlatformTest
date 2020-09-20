@@ -10,4 +10,5 @@ public interface IFunctionService {
     public R save(Function function);
     public void forbidden(Map<String,Object> map);
     public List<Function> list(Map<String,Object> map);
+    public R delete(Long id);
 }

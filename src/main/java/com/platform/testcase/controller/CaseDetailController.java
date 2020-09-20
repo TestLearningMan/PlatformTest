@@ -38,6 +38,8 @@ public class CaseDetailController {
         return iCaseDetailService.save(caseDetail);
     }
 
+    @RequestMapping("/delete.do")
+    @ResponseBody
     public R delete(String ids){
         if (StringUtils.isBlank(ids)){
             return R.error("请选择需要删除的测试用例");
