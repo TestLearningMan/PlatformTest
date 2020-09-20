@@ -9,7 +9,7 @@ import java.util.Map;
 
 public interface ITeamService {
     public R save(Team team);
-    public R delete(String ids);
+    public R batchDelete(String ids);
     public int count(Map<String,Object> map);
     public List<TeamVo> list(Map<String,Object> map);
     public R forbidden(List<Long> lists,int type);

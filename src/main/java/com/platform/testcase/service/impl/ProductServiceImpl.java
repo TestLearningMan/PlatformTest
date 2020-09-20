@@ -52,18 +52,18 @@ public class ProductServiceImpl implements IProductService {
 
 
     public R batchDelete(String productIds){
-        List<String> IdListStr = Splitter.on(",").splitToList(productIds);
-        List<Long> productIdList= BaseTypeUtils.strToLong(IdListStr);
-        int totalNum = productIdList.size();
-        String errMsg = checkAssociation(productIdList);
-        int successNum = productIdList.size();
+        List<String> idListStr = Splitter.on(",").splitToList(productIds);
+        List<Long> IdList= BaseTypeUtils.strToLong(idListStr);
+        int totalNum = IdList.size();
+        String errMsg = checkAssociation(IdList);
+        int successNum = IdList.size();
         int failNum = totalNum - successNum;
         StringBuilder msg = new StringBuilder();
         msg.append("操作成功\n").append("成功删除产品").append(successNum)
                 .append("个\n").append(failNum).append("个产品删除失败,")
                 .append(errMsg);
-        if (successNum != 0){
-            productMapper.batchDelete(productIdList);
+        if (successNum > 0){
+            productMapper.batchDelete(IdList);
         }
         return R.ok(errMsg.toString());
     }

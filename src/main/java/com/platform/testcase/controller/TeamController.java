@@ -40,13 +40,13 @@ public class TeamController {
         return iTeamService.save(team);
     }
 
-    @RequestMapping("/delete")
+    @RequestMapping("/batchDelete")
     @ResponseBody
-    public R delete(String ids){
+    public R batchDelete(String ids){
         if (StringUtils.isBlank(ids)){
             return R.ok("请选择需要删除的团队");
         }
-        return iTeamService.delete(ids);
+        return iTeamService.batchDelete(ids);
     }
 
     @RequestMapping("/list")

@@ -1,6 +1,7 @@
 package com.platform.testcase.service.impl;
 
 import com.platform.testcase.dao.TeamMapper;
+import com.platform.testcase.pojo.AssociateResult;
 import com.platform.testcase.pojo.Team;
 import com.platform.testcase.service.ITeamService;
 import com.google.common.base.Splitter;
@@ -40,14 +41,21 @@ public class TeamServiceImpl implements ITeamService {
         }
         return R.error("团队新增失败");
     }
-    public R delete(String ids){
-        List<String> idList = Splitter.on(ids).splitToList(",");
-        int result = teamMapper.delete(idList);
-        if (result > 0){
-            StringBuilder builder = new StringBuilder();
-            return R.ok(builder.append("已成功删除团队 ").append(result).append("个").toString());
+    public R batchDelete(String ids){
+        List<String> idListStr = Splitter.on(ids).splitToList(",");
+        List<Long> idList = BaseTypeUtils.strToLong(idListStr);
+        int totalNum = idList.size();
+        String errMsg = checkAssociation(idList);
+        int successNum = idList.size();
+        int failNum = totalNum - successNum;
+        StringBuilder msg = new StringBuilder();
+        msg.append("操作成功\n").append("成功删除团队").append(successNum)
+                .append("个\n").append(failNum).append("个团队删除失败,")
+                .append(errMsg);
+        if (successNum > 0){
+            teamMapper.batchDelete(idList);
         }
-        return R.error("团队删除失败");
+        return R.ok(errMsg.toString());
     }
     public int count(Map<String,Object> map){
         return teamMapper.count(map);
@@ -74,7 +82,30 @@ public class TeamServiceImpl implements ITeamService {
         return  R.ok("团队状态更新成功");
     }
 
+    private String checkAssociation(List<Long> idList){
+        List<AssociateResult> resultList= teamMapper.checkAssociated(idList);
+        if (resultList == null || resultList.size() == 0){
+            return "";
+        }
+        StringBuilder errMsg=new StringBuilder();
+        errMsg.append("失败原因如下:\n");
+        for(AssociateResult result : resultList) {
+            Long id = result.getId();
+            idList.remove(id);
+            switch (result.getType()){
+                case "6503":
+                    errMsg.append(result.getName()).append("已关联测试用例集，删除失败;\n");
+                    break;
+                case "6505":
+                    errMsg.append(result.getName()).append("已有团队成员，删除失败;\n");
+                    break;
+                    default:
+                    errMsg.append(result.getName()).append("已关联其他业务，删除失败;\n");
+            }
+        }
 
+        return errMsg.toString();
+    }
 
 
 

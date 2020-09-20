@@ -12,6 +12,13 @@
       <arg column="modifier_id" javaType="java.lang.Long" jdbcType="BIGINT" />
     </constructor>
   </resultMap>
+  <resultMap id="checkAssociatedMap" type="com.platform.testcase.pojo.AssociateResult">
+    <constructor>
+      <arg column="team_id" javaType="java.lang.Long" jdbcType="BIGINT" />
+      <arg column="type" javaType="java.lang.String" jdbcType="VARCHAR" />
+      <arg column="team_name" javaType="java.lang.String" jdbcType="VARCHAR" />
+    </constructor>
+  </resultMap>
   <sql id="Base_Column_List">
     id, team_name, status, create_time, modified_time, creator_id, modifier_id
   </sql>
@@ -114,16 +121,16 @@
     from tp_case_team
     where team_name = #{teamName}
   </select>
-  <delete id="delete" parameterType="java.util.List">
-    <if test="idList != null">
+  <delete id="batchDelete" parameterType="java.util.List">
         delete from tp_case_team
         <where>
+          <if test="idList != null">
             id in
-                <foreach collection="idList" separator="," close=")" open="("  index="index" item="item">
+                <foreach collection="idList" separator="," close=")" open="("  item="item">
                   #{item}
                 </foreach>
+          </if>
         </where>
-    </if>
   </delete>
   <select id="count" parameterType="java.util.Map">
     select count(1)
@@ -181,5 +188,36 @@
       </foreach>
     </if>
   </update>
-
+  <select id="checkAssociated" parameterType="java.util.List" resultMap="checkAssociatedMap" >
+    select r.team_id,r.type,p.team_name
+    from
+    (SELECT DISTINCT
+    team_id,
+    '6503' type
+    FROM
+    tp_case_list
+    <trim prefix="where">
+      <if test="idList != null">
+        team_id in
+        <foreach collection="idList" item="item" separator="," close=")" open="(">
+          #{item}
+        </foreach>
+      </if>
+    </trim>
+    union
+    SELECT DISTINCT
+    team_id,
+    '6505' type
+    FROM
+    tp_case_team_member
+    <trim prefix="where">
+      <if test="idList != null">
+        team_id in
+        <foreach collection="idList" open="(" close=")" separator="," item="item">
+          #{item}
+        </foreach>
+      </if>
+    </trim>
+    ) r LEFT join tp_case_team p on r.team_id = p.id
+  </select>
 </mapper>
