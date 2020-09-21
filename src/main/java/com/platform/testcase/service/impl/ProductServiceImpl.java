@@ -65,7 +65,7 @@ public class ProductServiceImpl implements IProductService {
         if (successNum > 0){
             productMapper.batchDelete(IdList);
         }
-        return R.ok(errMsg.toString());
+        return R.ok(msg.toString());
     }
 
     public List<ProductVo> list(Map<String,Object> query){

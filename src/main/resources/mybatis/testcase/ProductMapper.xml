@@ -184,7 +184,7 @@
       <if test="idList != null">
         product_id in
         <foreach collection="idList" open="(" close=")" separator="," item="item">
-            #{item}
+          #{item}
         </foreach>
       </if>
     </trim>) r LEFT join tp_case_product p on r.product_id = p.id

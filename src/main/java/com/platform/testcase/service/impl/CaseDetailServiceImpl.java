@@ -2,6 +2,7 @@ package com.platform.testcase.service.impl;
 
 import com.bootdo.common.utils.R;
 import com.platform.testcase.dao.CaseDetailMapper;
+import com.platform.testcase.pojo.AssociateResult;
 import com.platform.testcase.pojo.CaseDetail;
 import com.platform.testcase.service.iCaseDetailService;
 import org.apache.commons.lang.StringUtils;
@@ -57,11 +58,44 @@ public class CaseDetailServiceImpl implements iCaseDetailService {
     }
 
     @Override
-    public R delete(List<Long> idList){
-        int result = caseDetailMapper.delete(idList);
-
-        return  result == 0 ? R.ok("用例不存在或已被删除"):R.ok("用例删除成功");
+    public R batchDelete(List<Long> idList){
+        int totalNum = idList.size();
+        String errMsg = checkAssociation(idList);
+        int successNum = idList.size();
+        int failNum = totalNum - successNum;
+        if (successNum > 0){
+            caseDetailMapper.batchDelete(idList);
+        }
+        StringBuilder msg = new StringBuilder();
+        msg.append("操作成功\n").append("成功删除产品").append(successNum)
+                .append("个\n").append(failNum).append("个产品删除失败,")
+                .append(errMsg);
+        if (successNum > 0){
+            caseDetailMapper.batchDelete(idList);
+        }
+        return R.ok(msg.toString());
     }
 
+    private String checkAssociation(List<Long> idList){
+        List<AssociateResult> resultList= caseDetailMapper.checkAssociated(idList);
+        if (resultList == null || resultList.size() == 0){
+            return "";
+        }
+        StringBuilder errMsg=new StringBuilder();
+        errMsg.append("失败原因如下:\n");
+        for(AssociateResult result : resultList) {
+            Long id = result.getId();
+            idList.remove(id);
+            switch (result.getType()){
+                case "6501":
+                    errMsg.append(result.getName()).append("已关联测试结果，删除失败;\n");
+                    break;
+                default:
+                    errMsg.append(result.getName()).append("已关联其他业务，删除失败;\n");
+            }
+        }
+
+        return errMsg.toString();
+    }
 
 }

@@ -28,6 +28,13 @@
       <arg column="modifier_id" javaType="java.lang.Long" jdbcType="BIGINT" />
     </constructor>
   </resultMap>
+  <resultMap id="checkAssociatedMap" type="com.platform.testcase.pojo.AssociateResult">
+    <constructor>
+      <arg column="case_id" javaType="java.lang.Long" jdbcType="BIGINT" />
+      <arg column="type" javaType="java.lang.String" jdbcType="VARCHAR" />
+      <arg column="title" javaType="java.lang.String" jdbcType="VARCHAR" />
+    </constructor>
+  </resultMap>
   <sql id="Base_Column_List">
     id, product_id,function_id, level, img_path, precondition, title, exc_step, exp_results, remarks,
     status,type, apitest_caseid, unittest_caseid, uitest_caseid, backdev_id, relate_demand,
@@ -296,11 +303,30 @@
      title = #{title} and exc_step = #{excStep}
     and exp_results = #{expResults} and type = #{type}
   </select>
-  <delete id="delete" parameterType="java.util.List">
+  <delete id="batchDelete" parameterType="java.util.List">
     delete from tp_case_casedetail
     where id in
     <foreach collection="idList" open="(" close=")" separator="," item="item">
       #{item}
     </foreach>
   </delete>
+  <select id="checkAssociated" parameterType="java.util.List" resultMap="checkAssociatedMap" >
+    select d.case_id,d.type,c.title
+    from
+    (SELECT DISTINCT
+    case_id,
+    '6501' type
+    FROM
+    tp_case_listdetail
+    <trim prefix="where">
+      <if test="idList != null">
+        case_id in
+        <foreach collection="idList" item="item" separator="," close=")" open="(">
+          #{item}
+        </foreach>
+      </if>
+    </trim>
+) d LEFT join tp_case_casedetail c on d.case_id = c.id
+  </select>
+
 </mapper>

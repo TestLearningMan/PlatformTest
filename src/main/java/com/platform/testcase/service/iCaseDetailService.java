@@ -9,5 +9,5 @@ public interface iCaseDetailService {
 
     public R verify(CaseDetail caseDetail);
     public R save(CaseDetail caseDetail);
-    public R delete(List<Long> idList);
+    public R batchDelete(List<Long> idList);
 }

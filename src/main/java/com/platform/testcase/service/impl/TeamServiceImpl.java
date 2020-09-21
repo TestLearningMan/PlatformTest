@@ -55,7 +55,7 @@ public class TeamServiceImpl implements ITeamService {
         if (successNum > 0){
             teamMapper.batchDelete(idList);
         }
-        return R.ok(errMsg.toString());
+        return R.ok(msg.toString());
     }
     public int count(Map<String,Object> map){
         return teamMapper.count(map);
