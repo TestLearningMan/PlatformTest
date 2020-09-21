@@ -42,7 +42,7 @@ public class TeamServiceImpl implements ITeamService {
         return R.error("团队新增失败");
     }
     public R batchDelete(String ids){
-        List<String> idListStr = Splitter.on(ids).splitToList(",");
+        List<String> idListStr = Splitter.on(",").splitToList(ids);
         List<Long> idList = BaseTypeUtils.strToLong(idListStr);
         int totalNum = idList.size();
         String errMsg = checkAssociation(idList);

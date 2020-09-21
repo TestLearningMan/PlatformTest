@@ -1,11 +1,11 @@
 package com.platform.testcase.controller;
 
-import com.bootdo.common.utils.PageUtils;
-import com.bootdo.common.utils.Query;
-import com.bootdo.common.utils.R;
-import com.bootdo.common.utils.ShiroUtils;
+import com.bootdo.common.utils.*;
+import com.google.common.base.Splitter;
 import com.platform.testcase.pojo.TeamMember;
 import com.platform.testcase.service.ITeamMember;
+import com.platform.testcase.utils.BaseTypeUtils;
+import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -42,13 +42,16 @@ public class TeamMemberController {
         return iTeamMember.update(member);
     }
 
-    @RequestMapping("/delete")
+    @RequestMapping("/batchDelete")
     @ResponseBody
-    public R delete(List<TeamMember> members){
-        if ( null == members || members.size() == 0 ){
-            return R.error("需要删除团队成员不能为空");
+    public R batchDelete(String ids,String tId){
+        if ( StringUtils.isBlank(ids) || StringUtils.isBlank(tId) ){
+            return R.error("需要删除团队成员/团队不能为空");
         }
-        return iTeamMember.delete(members);
+        Long teamId = Long.valueOf(tId);
+        List<String> lists = Splitter.on(",").splitToList(ids);
+        List<Long> testerIds = BaseTypeUtils.strToLong(lists);
+        return iTeamMember.batchDelete(testerIds,teamId);
     }
 
     @RequestMapping("/List")

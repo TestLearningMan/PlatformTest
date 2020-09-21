@@ -110,14 +110,15 @@
       modifier_id = nuw()
     where team_id = #{teamId,jdbcType=BIGINT} and tester_id = #{tester_id,jdbcType=BIGINT}
   </update>
-  <delete id="delete" parameterType="java.util.List">
-    <if test="members != null">
+  <delete id="batchDelete" parameterType="java.util.List" >
     delete from tp_case_team_member
     where
-        <foreach collection="members != null" separator="or" item="item" >
-          (team_id = #{item.teamId} and tester_id = #{item.testerId})
+        team_id = #{teamId}
+        and
+        tester_id in
+        <foreach collection="testerIds" separator="," item="item" open="(" close=")" >
+          #{item}
         </foreach>
-    </if>
   </delete>
   <select id="count" parameterType="java.util.HashMap">
     select count(1)

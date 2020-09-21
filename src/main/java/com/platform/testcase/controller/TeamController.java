@@ -40,7 +40,7 @@ public class TeamController {
         return iTeamService.save(team);
     }
 
-    @RequestMapping("/batchDelete")
+        @RequestMapping("/batchDelete")
     @ResponseBody
     public R batchDelete(String ids){
         if (StringUtils.isBlank(ids)){

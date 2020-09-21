@@ -163,4 +163,30 @@
       modifier_id = #{modifierId,jdbcType=BIGINT}
     where id = #{id,jdbcType=BIGINT}
   </update>
+  <update id="clearTesterOfListDetail" >
+    <!--删除团队成员时，把该成员下所有未测试用例的测试人都清空><-->
+    UPDATE tp_case_listdetail
+    SET tester_id = NULL
+    WHERE
+	result = 3
+	AND id IN (
+    SELECT d.id
+    FROM
+	(
+	select id,list_id
+    FROM tp_case_listdetail
+    WHERE tester_id in
+    <!--如果加上if的话，当testerIds和teamId为空时，
+    就会将所有listDetail中的tester_id清空所以不加if><-->
+    <foreach collection="testerIds" item="item"  separator="," open="("
+             close=")">
+      #{item}
+    </foreach>
+    ) d inner join (
+	select id
+	from tp_case_list
+	where team_id =#{teamId}) l on d.list_id = l.id )
+  </update>
+
+
 </mapper>

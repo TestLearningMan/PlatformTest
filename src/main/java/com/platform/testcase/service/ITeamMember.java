@@ -12,7 +12,7 @@ import java.util.Map;
 public interface ITeamMember {
     public R add(TeamMember member);
     public R update(TeamMember member);
-    public R delete(List<TeamMember> members);
+    public R batchDelete(List<Long> testerIds,Long teamId);
     public int count(HashMap<String,Object> map);
     public List<TeamMemberVo> list(Map<String,Object> map);
 }

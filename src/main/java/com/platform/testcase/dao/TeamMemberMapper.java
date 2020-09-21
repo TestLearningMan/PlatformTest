@@ -2,6 +2,7 @@ package com.platform.testcase.dao;
 
 import com.platform.testcase.pojo.TeamMember;
 import com.platform.testcase.vo.TeamMemberVo;
+import org.apache.ibatis.annotations.Param;
 
 import java.util.HashMap;
 import java.util.List;
@@ -20,7 +21,8 @@ public interface TeamMemberMapper {
 
     int updateByPrimaryKey(TeamMember record);
 
-    int delete(List<TeamMember> members);
+    int batchDelete(@Param("testerIds") List<Long> testerIds,
+                    @Param("teamId") Long teamId);
 
     int count(Map<String,Object> map);
 
