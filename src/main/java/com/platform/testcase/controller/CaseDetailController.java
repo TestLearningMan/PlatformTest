@@ -2,13 +2,12 @@ package com.platform.testcase.controller;
 
 import com.bootdo.common.utils.R;
 import com.bootdo.common.utils.ShiroUtils;
+import org.apache.commons.lang3.StringUtils;
 import com.google.common.base.Splitter;
 import com.platform.testcase.pojo.CaseDetail;
-import com.platform.testcase.service.IFunctionService;
 import com.platform.testcase.service.iCaseDetailService;
 import com.platform.testcase.utils.BaseTypeUtils;
 import com.platform.testcase.utils.IdGenerator;
-import org.apache.commons.lang.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -45,7 +44,18 @@ public class CaseDetailController {
             return R.error("请选择需要删除的测试用例");
         }
         List<Long> idList = BaseTypeUtils.strToLong(Splitter.on(",").splitToList(ids));
-    return  null;
+        return  iCaseDetailService.batchDelete(idList);
+    }
+
+    @RequestMapping("/caseDetail.do")
+    @ResponseBody
+    public R caseDetail(String id){
+        if(StringUtils.isBlank(id)){
+            return R.error("请重新选择需要查看的用例");
+        }
+        return iCaseDetailService.caseDetail(Long.valueOf(id));
+
+
     }
 
 

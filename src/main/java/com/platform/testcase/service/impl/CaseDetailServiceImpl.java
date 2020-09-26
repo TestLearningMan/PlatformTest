@@ -5,6 +5,7 @@ import com.platform.testcase.dao.CaseDetailMapper;
 import com.platform.testcase.pojo.AssociateResult;
 import com.platform.testcase.pojo.CaseDetail;
 import com.platform.testcase.service.iCaseDetailService;
+import com.platform.testcase.vo.CaseDetailVo;
 import org.apache.commons.lang.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -63,18 +64,34 @@ public class CaseDetailServiceImpl implements iCaseDetailService {
         String errMsg = checkAssociation(idList);
         int successNum = idList.size();
         int failNum = totalNum - successNum;
-        if (successNum > 0){
-            caseDetailMapper.batchDelete(idList);
-        }
         StringBuilder msg = new StringBuilder();
         msg.append("操作成功\n").append("成功删除产品").append(successNum)
                 .append("个\n").append(failNum).append("个产品删除失败,")
                 .append(errMsg);
-        if (successNum > 0){
+        R r = R.ok();
+        if (successNum >0 ){
             caseDetailMapper.batchDelete(idList);
+        }else{
+            r.put("code",400);
         }
-        return R.ok(msg.toString());
+        r.put("msg",msg.toString());
+        return r;
     }
+
+    @Override
+    public R caseDetail(Long id){
+        //当前用例执行结果另外调用结果查询接口去查
+        //相关人员只返回ID，前端去缓存的人员名单中查
+        CaseDetailVo vo =  caseDetailMapper.getCaseDetail(id);
+        if (vo == null){
+            return R.error("所查看用例不存在或已被删除");
+        }
+        R r = R.ok();
+        r.put("msg","success");
+        r.put("data",vo);
+        return r;
+    }
+
 
     private String checkAssociation(List<Long> idList){
         List<AssociateResult> resultList= caseDetailMapper.checkAssociated(idList);
@@ -97,5 +114,9 @@ public class CaseDetailServiceImpl implements iCaseDetailService {
 
         return errMsg.toString();
     }
+
+
+
+
 
 }

@@ -52,10 +52,14 @@ public class TeamServiceImpl implements ITeamService {
         msg.append("操作成功\n").append("成功删除团队").append(successNum)
                 .append("个\n").append(failNum).append("个团队删除失败,")
                 .append(errMsg);
-        if (successNum > 0){
+        R r = R.ok();
+        if (successNum >0 ){
             teamMapper.batchDelete(idList);
+        }else{
+            r.put("code",400);
         }
-        return R.ok(msg.toString());
+        r.put("msg",msg.toString());
+        return r;
     }
     public int count(Map<String,Object> map){
         return teamMapper.count(map);

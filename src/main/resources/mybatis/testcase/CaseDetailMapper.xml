@@ -328,5 +328,19 @@
     </trim>
 ) d LEFT join tp_case_casedetail c on d.case_id = c.id
   </select>
+  <select id="getCaseDetail"  parameterType="java.lang.Long" resultType="com.platform.testcase.vo.CaseDetailVo">
+    select c.id,c.product_id,p.product_name,c.function_id,f.function_name,c.level,c.img_path,c.precondition,c.title,c.exc_step,
+    c.Exp_results,c.remarks,c.status,c.apitest_caseid,c.unittest_caseid,c.uitest_caseid,c.backdev_id,c.relate_demand,c.frontdev_id,
+    c.productman_id,c.modified_time            ,c.modifier_id
+    from ((
+        select id,product_id,function_id,level,img_path,precondition,title,exc_step,Exp_results,
+        remarks,status,apitest_caseid,unittest_caseid,uitest_caseid,backdev_id,relate_demand,frontdev_id,productman_id,modified_time,modifier_id
+        from tp_case_casedetail
+        <trim prefix="where">
+          <if test="id != 0"> id = #{id} </if>
+        </trim>) c
+        left join tp_case_product p on c.product_id = p.id)
+        left join  tp_case_function f on c.function_id = f.id
+  </select>
 
 </mapper>
