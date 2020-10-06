@@ -6,6 +6,7 @@ import com.platform.testcase.vo.CaseDetailVo;
 import org.apache.ibatis.annotations.Param;
 
 import java.util.List;
+import java.util.Map;
 
 public interface CaseDetailMapper {
     int deleteByPrimaryKey(Long id);
@@ -26,5 +27,11 @@ public interface CaseDetailMapper {
 
     List<AssociateResult> checkAssociated(@Param("idList") List<Long> idList );
 
-    CaseDetailVo getCaseDetail(@Param("id") Long id);
+    List<CaseDetailVo> getCaseDetail( Map<String,Object> map);
+
+    int saveResult(@Param("idList") List<Long> idList,@Param("result") int result);
+
+    int forbidden(@Param("idList") List<Long> idList,@Param("status") int status);
+
+    int count(Map<String,Object> map);
 }

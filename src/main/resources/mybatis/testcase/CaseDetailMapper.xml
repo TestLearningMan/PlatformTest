@@ -336,11 +336,47 @@
         select id,product_id,function_id,level,img_path,precondition,title,exc_step,Exp_results,
         remarks,status,apitest_caseid,unittest_caseid,uitest_caseid,backdev_id,relate_demand,frontdev_id,productman_id,modified_time,modifier_id
         from tp_case_casedetail
-        <trim prefix="where">
-          <if test="id != 0"> id = #{id} </if>
+        <trim prefix="where" prefixOverrides="and">
+            <if test="id != 0"> and id = #{id} </if>
+            <if test="title != null">and title = #{title}</if>
+            <if test="functionId != null">and function_id = #{functionId}</if>
+            <if test="product_id != null">and product_id = #{productId}</if>
+            <if test="status != null">and status = #{status}</if>
+            <if test="type != null">and type = #{type}</if>
         </trim>) c
         left join tp_case_product p on c.product_id = p.id)
         left join  tp_case_function f on c.function_id = f.id
   </select>
+  <select id="count" parameterType="java.util.Map" resultType="java.lang.Integer">
+    select count(1)
+    from tp_case_casedetail
+    <trim prefix="where" prefixOverrides="and">
+      <if test="title != null">
+        and title = #{title}
+      </if>
+      <if test="functionId != null">
+        and function_id = #{functionId}
+      </if>
+      <if test="productId != null">
+        and product_id = #{productId}
+      </if>
+      <if test="status != null">
+        and status = #{status}
+      </if>
+      <if test="type != null">
+        and type = #{type}
+      </if>
+    </trim>
+  </select>
+  <update id="forbidden">
+    update tp_case_casedetail
+    set status = #{status}
+    <trim prefix="where">
+        id in
+        <foreach collection="idList" item="item" open="(" close=")" separator=",">
+          #{item}
+        </foreach>
+    </trim>
+  </update>
 
 </mapper>

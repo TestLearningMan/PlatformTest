@@ -144,7 +144,7 @@
       limit #{offset},#{limit}
     </if>
   </select>
-  <select id="checkAssociated" parameterType="java.util.List" resultMap="AssociateResultMap" >
+  <select id="checkAssociated"  resultMap="AssociateResultMap" >
     select r.product_id,r.type,p.product_name
     from
     (SELECT DISTINCT
@@ -191,12 +191,7 @@
   </select>
   <update id="forbidden" >
     update tp_case_product
-    <if test="type == 0">
-      set status = 0
-    </if>
-    <if test="type == 1">
-      set status = 1
-    </if>
+        set status = #{type}
     where
     <if test="lists != null">
       id in

@@ -42,8 +42,7 @@ public class ProductController {
     @ResponseBody
     public R list(@RequestParam Map<String,Object> map){
         Object limit = map.get("limit");
-        if (null == limit || StringUtils.isBlank(limit.toString())
-                || 0 == Integer.parseInt(limit.toString())) {
+        if (null == limit || 0 == Integer.parseInt(limit.toString())) {
             return R.error("每页条数不能为空");
         }
         Query query = new Query(map);

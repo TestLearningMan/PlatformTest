@@ -11,6 +11,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
+import java.util.Map;
 
 @Service
 public class CaseDetailServiceImpl implements iCaseDetailService {
@@ -79,18 +80,48 @@ public class CaseDetailServiceImpl implements iCaseDetailService {
     }
 
     @Override
-    public R caseDetail(Long id){
+    public List<CaseDetailVo> caseDetailList(Map<String,Object> map){
         //当前用例执行结果另外调用结果查询接口去查
         //相关人员只返回ID，前端去缓存的人员名单中查
-        CaseDetailVo vo =  caseDetailMapper.getCaseDetail(id);
-        if (vo == null){
-            return R.error("所查看用例不存在或已被删除");
-        }
-        R r = R.ok();
-        r.put("msg","success");
-        r.put("data",vo);
-        return r;
+        List<CaseDetailVo> voList =  caseDetailMapper.getCaseDetail(map);
+        return voList;
     }
+
+    /**
+     * 测试用例不需要保存结果，结果保存在测试用例集
+     * @param idList
+     * @param
+     * @return
+
+    @Override
+    public R saveResult(List<Long> idList,int result){
+        int num = caseDetailMapper.saveResult(idList,result);
+        if (num > 0){
+            return R.ok("用例结果更新成功");
+        }
+        return R.error("用例不存在或结果被已更新");
+    }*/
+
+    @Override
+    public R forbidden(List<Long> idList,int status){
+        int result =  caseDetailMapper.forbidden(idList,status);
+        //根据status返回不同的提示
+        if (status == 0){
+            if (result > 0){return R.ok("测试用例禁用成功");}
+            return R.error("已禁用的测试用例不能再禁用");
+        }
+        if (status == 1){
+            if (result > 0){return R.ok("测试用例启用成功");}
+            return R.error("已启用的测试用例不能再启用");
+        }
+        return R.ok("操作成功");
+    }
+
+    public int count(Map<String,Object> map){
+        return caseDetailMapper.count(map);
+    }
+
+
 
 
     private String checkAssociation(List<Long> idList){
