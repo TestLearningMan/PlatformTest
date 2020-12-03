@@ -27,7 +27,9 @@ public interface CaseDetailMapper {
 
     List<AssociateResult> checkAssociated(@Param("idList") List<Long> idList );
 
-    List<CaseDetailVo> getCaseDetail( Map<String,Object> map);
+    CaseDetailVo getCaseDetail(Long id);
+
+    List<CaseDetailVo> getCaseList( Map<String,Object> map);
 
     int saveResult(@Param("idList") List<Long> idList,@Param("result") int result);
 

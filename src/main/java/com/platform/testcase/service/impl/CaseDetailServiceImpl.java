@@ -80,10 +80,18 @@ public class CaseDetailServiceImpl implements iCaseDetailService {
     }
 
     @Override
-    public List<CaseDetailVo> caseDetailList(Map<String,Object> map){
+    public CaseDetailVo caseDetail(Long id){
         //当前用例执行结果另外调用结果查询接口去查
         //相关人员只返回ID，前端去缓存的人员名单中查
-        List<CaseDetailVo> voList =  caseDetailMapper.getCaseDetail(map);
+        CaseDetailVo vo =  caseDetailMapper.getCaseDetail(id);
+        return vo;
+    }
+
+    @Override
+    public List<CaseDetailVo> caseList(Map<String,Object> map){
+        //当前用例执行结果另外调用结果查询接口去查
+        //相关人员只返回ID，前端去缓存的人员名单中查
+        List<CaseDetailVo> voList =  caseDetailMapper.getCaseList(map);
         return voList;
     }
 
