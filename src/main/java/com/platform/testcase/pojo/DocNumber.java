@@ -4,16 +4,18 @@ import java.util.Date;
 
 public class DocNumber {
     Long id;
-    Integer type;
-    Long number;
-    String prefix;
+    Integer docCode;
+    String docType;
+    Long docNumber;
+    String docPrefix;
     Date modified_time;
 
-    public DocNumber(Long id, Integer type, Long number, String prefix, Date modified_time) {
+    public DocNumber(Long id, Integer docCode, String docType, Long docNumber, String docPrefix, Date modified_time) {
         this.id = id;
-        this.type = type;
-        this.number = number;
-        this.prefix = prefix;
+        this.docCode = docCode;
+        this.docType = docType;
+        this.docNumber = docNumber;
+        this.docPrefix = docPrefix;
         this.modified_time = modified_time;
     }
 
@@ -25,28 +27,36 @@ public class DocNumber {
         this.id = id;
     }
 
-    public Integer getType() {
-        return type;
+    public Integer getDocCode() {
+        return docCode;
     }
 
-    public void setType(Integer type) {
-        this.type = type;
+    public void setDocCode(Integer docCode) {
+        this.docCode = docCode;
     }
 
-    public Long getNumber() {
-        return number;
+    public String getDocType() {
+        return docType;
     }
 
-    public void setNumber(Long number) {
-        this.number = number;
+    public void setDocType(String docType) {
+        this.docType = docType;
     }
 
-    public String getPrefix() {
-        return prefix;
+    public Long getDocNumber() {
+        return docNumber;
     }
 
-    public void setPrefix(String prefix) {
-        this.prefix = prefix;
+    public void setDocNumber(Long docNumber) {
+        this.docNumber = docNumber;
+    }
+
+    public String getDocPrefix() {
+        return docPrefix;
+    }
+
+    public void setDocPrefix(String docPrefix) {
+        this.docPrefix = docPrefix;
     }
 
     public Date getModified_time() {

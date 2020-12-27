@@ -4,6 +4,7 @@
   <resultMap id="BaseResultMap" type="com.platform.testcase.pojo.CaseDetail">
     <constructor>
       <idArg column="id" javaType="java.lang.Long" jdbcType="BIGINT" />
+      <arg column="case_number" javaType="java.lang.String" jdbcType="VARCHAR" />
       <arg column="product_id" javaType="java.lang.Long" jdbcType="BIGINT" />
       <arg column="function_id" javaType="java.lang.Long" jdbcType="BIGINT" />
       <arg column="level" javaType="java.lang.Integer" jdbcType="INTEGER" />
@@ -36,7 +37,7 @@
     </constructor>
   </resultMap>
   <sql id="Base_Column_List">
-    id, product_id,function_id, level, img_path, precondition, title, exc_step, exp_results, remarks,
+    id, case_number,product_id,function_id, level, img_path, precondition, title, exc_step, exp_results, remarks,
     status,type, apitest_caseid, unittest_caseid, uitest_caseid, backdev_id, relate_demand,
     frontdev_id, productman_id, create_time, modified_time, creator_id, modifier_id
   </sql>
@@ -51,7 +52,7 @@
     where id = #{id,jdbcType=BIGINT}
   </delete>
   <insert id="insert" parameterType="com.platform.testcase.pojo.CaseDetail">
-    insert into tp_case_casedetail (id, product_id,function_id, level,
+    insert into tp_case_casedetail (id, case_number, product_id,function_id, level,
       img_path, precondition, title,
       exc_step, exp_results, remarks,
       status,type,apitest_caseid, unittest_caseid,
@@ -59,7 +60,7 @@
       frontdev_id, productman_id, create_time,
       modified_time, creator_id, modifier_id
       )
-    values (#{id,jdbcType=BIGINT}, #{product_id,jdbcType=BIGINT},#{functionId,jdbcType=BIGINT}, #{level,jdbcType=INTEGER},
+    values (#{id,jdbcType=BIGINT}, #{caseNumber,jdbcType=VARCHAR},#{productId,jdbcType=BIGINT},#{functionId,jdbcType=BIGINT}, #{level,jdbcType=INTEGER},
       #{imgPath,jdbcType=VARCHAR}, #{precondition,jdbcType=VARCHAR}, #{title,jdbcType=VARCHAR},
       #{excStep,jdbcType=VARCHAR}, #{expResults,jdbcType=VARCHAR}, #{remarks,jdbcType=VARCHAR},
       #{status,jdbcType=INTEGER},#{type,jdbcType=INTEGER}, #{apitestCaseid,jdbcType=VARCHAR}, #{unittestCaseid,jdbcType=VARCHAR},
@@ -73,6 +74,9 @@
     <trim prefix="(" suffix=")" suffixOverrides=",">
       <if test="id != null">
         id,
+      </if>
+      <if test="caseNumber != null">
+        case_number,
       </if>
       <if test="productId != null">
         product_id,
@@ -140,6 +144,9 @@
     <trim prefix="values (" suffix=")" suffixOverrides=",">
       <if test="id != null">
         #{id,jdbcType=BIGINT},
+      </if>
+      <if test="caseNumber != null">
+        #{caseNumber,jdbcType=VARCHAR}
       </if>
       <if test="productId != null">
         #{product_id,jdbcType=BIGINT},
@@ -209,7 +216,10 @@
     update tp_case_casedetail
     <set>
       <if test="productId != null">
-        #{product_id,jdbcType=BIGINT},
+        product_id = #{product_id,jdbcType=BIGINT},
+      </if>
+      <if test="caseNumber != null and caseNumber !=''">
+        case_number = #{caseNumber,jdbcType=VARCHAR},
       </if>
       <if test="functionId != null">
         function_id = #{functionId,jdbcType=BIGINT},
@@ -274,7 +284,8 @@
   </update>
   <update id="updateByPrimaryKey" parameterType="com.platform.testcase.pojo.CaseDetail">
     update tp_case_casedetail
-    set function_id = #{functionId,jdbcType=BIGINT},
+    set case_number = #{caseNumber,jdbcType=VARCHAR},
+      function_id = #{functionId,jdbcType=BIGINT},
       level = #{level,jdbcType=INTEGER},
       img_path = #{imgPath,jdbcType=VARCHAR},
       precondition = #{precondition,jdbcType=VARCHAR},
@@ -299,9 +310,23 @@
   <select id="exist" parameterType="com.platform.testcase.pojo.CaseDetail" resultType="java.lang.Long">
     select id
     from tp_case_casedetail
-    where
-     title = #{title} and exc_step = #{excStep}
-    and exp_results = #{expResults} and type = #{type}
+    <trim prefix="where" prefixOverrides="and">
+      <if test="title != null and title != ''">
+        title = #{title}
+      </if>
+      <if test="excStep != null and excStep != ''">
+        and exc_step = #{excStep}
+      </if>
+      <if test="exp_results != null and exp_results != ''">
+        and exp_results = #{expResults}
+      </if>
+      <if test="type != null and type != ''">
+        and `type` = #{type}
+      </if>
+      <if test="caseNumber !=null and caseNumber !=''">
+        and case_number = #{caseNumber}
+      </if>
+    </trim>
   </select>
   <delete id="batchDelete" parameterType="java.util.List">
     delete from tp_case_casedetail
@@ -329,11 +354,11 @@
 ) d LEFT join tp_case_casedetail c on d.case_id = c.id
   </select>
   <select id="getCaseDetail"  parameterType="java.lang.Long" resultType="com.platform.testcase.vo.CaseDetailVo">
-    select c.id,c.product_id,p.product_name,c.function_id,f.function_name,c.level,c.img_path,c.precondition,c.title,c.exc_step,
+    select c.id,c.case_number,c.product_id,p.product_name,c.function_id,f.function_name,c.level,c.img_path,c.precondition,c.title,c.exc_step,
     c.Exp_results,c.remarks,c.status,c.apitest_caseid,c.unittest_caseid,c.uitest_caseid,c.backdev_id,c.relate_demand,c.frontdev_id,
     c.productman_id,c.modified_time            ,c.modifier_id
     from ((
-        select id,product_id,function_id,level,img_path,precondition,title,exc_step,Exp_results,
+        select id,case_number,product_id,function_id,`level`,img_path,precondition,title,exc_step,Exp_results,
         remarks,status,apitest_caseid,unittest_caseid,uitest_caseid,backdev_id,relate_demand,frontdev_id,productman_id,modified_time,modifier_id
         from tp_case_casedetail
         <where>
@@ -343,11 +368,11 @@
         left join  tp_case_function f on c.function_id = f.id
   </select>
   <select id="getCaseList"  parameterType="java.util.Map" resultType="com.platform.testcase.vo.CaseDetailVo">
-    select c.id,c.product_id,p.product_name,c.function_id,f.function_name,c.level,c.img_path,c.precondition,c.title,c.exc_step,
+    select c.id,c.case_number,c.product_id,p.product_name,c.function_id,f.function_name,c.level,c.img_path,c.precondition,c.title,c.exc_step,
     c.Exp_results,c.remarks,c.status,c.apitest_caseid,c.unittest_caseid,c.uitest_caseid,c.backdev_id,c.relate_demand,c.frontdev_id,
     c.productman_id,c.modified_time            ,c.modifier_id
     from ((
-    select id,product_id,function_id,level,img_path,precondition,title,exc_step,Exp_results,
+    select id,case_number,product_id,function_id,`level`,img_path,precondition,title,exc_step,Exp_results,
     remarks,status,apitest_caseid,unittest_caseid,uitest_caseid,backdev_id,relate_demand,frontdev_id,productman_id,modified_time,modifier_id
     from tp_case_casedetail
     <trim prefix="where" prefixOverrides="and">
@@ -379,7 +404,10 @@
         and status = #{status}
       </if>
       <if test="type != null">
-        and type = #{type}
+        and `type` = #{type}
+      </if>
+      <if test="caseNumber !=null and caseNumber!= ''">
+        and case_number = #{caseNumber}
       </if>
     </trim>
   </select>

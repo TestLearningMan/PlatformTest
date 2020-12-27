@@ -4,12 +4,12 @@ import org.activiti.bpmn.model.Interface;
 
 public class Const {
     public enum serviceType{
-        FUNCTION1(6502,"功能"),
-        TEAM(6506,"团队"),
-        PRODUCT(6504,"产品"),
-        List(6503,"用例集"),
-        TEAMMEMBER(6505,"团队成员"),
-        CASEDETAIL(6501,"测试用例");
+        FUNCTION1(6502,"FUNCTION"),
+        TEAM(6506,"TEAM"),
+        PRODUCT(6504,"PRODUCT"),
+        List(6503,"List"),
+        TEAMMEMBER(6505,"TEAMMEMBER"),
+        CASEDETAIL(6501,"CASEDETAIL");
         int code;
         String value;
 

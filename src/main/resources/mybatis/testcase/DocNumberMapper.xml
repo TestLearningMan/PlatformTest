@@ -4,38 +4,39 @@
     <resultMap id="BaseResultMap" type="com.platform.testcase.pojo.DocNumber" >
         <constructor >
             <arg column="id" jdbcType="BIGINT" javaType="java.lang.Long" />
-            <arg column="doc_type" jdbcType="INT" javaType="java.lang.Integer" />
+            <arg column="doc_code" jdbcType="INTEGER" javaType="java.lang.Integer" />
+            <arg column="doc_type" jdbcType="VARCHAR" javaType="java.lang.String" />
             <arg column="doc_number" jdbcType="BIGINT" javaType="java.lang.Long" />
             <arg column="doc_prefix" jdbcType="VARCHAR" javaType="java.lang.String" />
             <arg column="modified_time" jdbcType="TIMESTAMP" javaType="java.util.Date" />
         </constructor>
     </resultMap>
     <sql id="Base_Column_List" >
-    id,doc_type,doc_number,doc_prefix,modified_time
+    id,doc_code,doc_type,doc_number,doc_prefix,modified_time
     </sql>
-    <select id="selectByType"  parameterType="java.lang.Integer" resultMap="BaseResultMap">
+    <select id="selectByCode"  parameterType="java.lang.Integer" resultMap="BaseResultMap">
     select
         <include refid="Base_Column_List" />
     from tp_bs_docNumber
-    <if test="type != null and type !=''">
-        where doc_type = #{type}
+    <if test="docCode != null and docCode !=''">
+        where doc_code = #{docCode}
     </if>
   </select>
     <select id="isExist" parameterType="java.lang.Long" >
     select count(1)
     from tp_bs_docNumber
     <trim prefix="where" prefixOverrides="and">
-        <if test="number != 0">
+        <if test="docNumber != 0">
             doc_number = #{number}
         </if>
-        <if test="type !=0">
-            and doc_type =  #{type}
+        <if test="docCode !=0">
+            and doc_doc =  #{docCode}
         </if>
     </trim>
     </select>
     <update id="updateNumber" parameterType="java.lang.Long">
     update tp_bs_docNumber
         set doc_number = #{number}
-    where   doc_type = #{type}
+    where   doc_doc = #{docCode}
     </update>
 </mapper>

@@ -5,6 +5,8 @@ import java.util.Date;
 public class CaseDetail {
     private Long id;
 
+    private String caseNumber;
+
     private Long product_id;
 
     private Long functionId;
@@ -55,6 +57,14 @@ public class CaseDetail {
 
     public void setProduct_id(Long product_id) {
         this.product_id = product_id;
+    }
+
+    public String getCaseNumber() {
+        return caseNumber;
+    }
+
+    public void setCaseNumber(String caseNumber) {
+        this.caseNumber = caseNumber;
     }
 
     public Integer getType() {

@@ -4,8 +4,8 @@ import com.platform.testcase.pojo.DocNumber;
 import org.apache.ibatis.annotations.Param;
 
 public interface DocNumberMapper {
-    DocNumber selectByType(@Param("type") int type);
-    int updateNumber(@Param("number") Long number,@Param("type") int type);
-    int isExist(@Param("number") Long number,@Param("type") int type);
+    DocNumber selectByCode(@Param("docCode") int docCode);
+    int updateNumber(@Param("docNumber") Long number,@Param("docCode") int type);
+    int isExist(@Param("docNumber") Long number,@Param("docCode") int type);
 
 }

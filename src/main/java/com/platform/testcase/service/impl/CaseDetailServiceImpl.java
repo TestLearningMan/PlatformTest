@@ -1,9 +1,11 @@
 package com.platform.testcase.service.impl;
 
 import com.bootdo.common.utils.R;
+import com.platform.testcase.common.Const;
 import com.platform.testcase.dao.CaseDetailMapper;
 import com.platform.testcase.pojo.AssociateResult;
 import com.platform.testcase.pojo.CaseDetail;
+import com.platform.testcase.service.IDocNumberService;
 import com.platform.testcase.service.iCaseDetailService;
 import com.platform.testcase.vo.CaseDetailVo;
 import org.apache.commons.lang.StringUtils;
@@ -19,10 +21,15 @@ public class CaseDetailServiceImpl implements iCaseDetailService {
     @Autowired
     CaseDetailMapper caseDetailMapper;
 
+    @Autowired
+    IDocNumberService iDocNumberService;
+
     @Override
     public R save(CaseDetail caseDetail){
         int result = 0;
         if (caseDetail.getId() == -1){
+            String no = caseDetail.getCaseNumber();
+            no = iDocNumberService.updateNumber(no, Const.serviceType.CASEDETAIL.getCode());
             result =caseDetailMapper.insertSelective(caseDetail);
         }else {
             result = caseDetailMapper.updateByPrimaryKeySelective(caseDetail);
