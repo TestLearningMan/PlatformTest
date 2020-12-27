@@ -16,6 +16,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
 
 import java.util.List;
@@ -55,18 +56,34 @@ public class CaseDetailController {
 
     @RequestMapping("/caseDetail.do")
     @ResponseBody
-    public R caseDetail(Map<String,Object> map){
-        Object id = map.get("id");
-        if(id == null || StringUtils.isBlank(id.toString())){
+    public R caseDetail(Long id){
+        if(id ==0 || id < 0){
             return R.error("请重新选择需要查看的用例");
         }
-        List<CaseDetailVo> voList = iCaseDetailService.caseDetailList(map);
-        if (voList.size() == 0){
+        CaseDetailVo vo = iCaseDetailService.caseDetail(id);
+        if (vo == null){
             return R.error("用例已被删除或不存在");
         }
-        //一次只能查看一个用例的明细，所以只需要把第一个用例的对象返回即可
-        return R.ok().put("data",voList.get(0));
+        return R.ok().put("data",vo);
     }
+
+    @RequestMapping("/list.do")
+    @ResponseBody
+    //@RequestParam 可以以map的形式接收到拼装在url中的参数。但是不安全，因为可以随意拼接字段进去,建议还是转成json字符串传给后端
+    public R list(@RequestParam Map<String, Object> map){
+        if (map.size() == 0){
+            return R.error("前端传参错误");
+        }
+        Object limit = map.get("limit");
+        if (null == limit || 0 == Integer.parseInt(String.valueOf(limit))) {
+            return R.error("每页条数不能为空"); }
+        Query query = new Query(map);
+        int total = iCaseDetailService.count(query);
+        List<CaseDetailVo> voList =  iCaseDetailService.caseList(query);
+        PageUtils pageUtils = new PageUtils(voList, total);
+        return R.ok().put("data",pageUtils);
+    }
+
     /**
      * 用例结果保存在结果集，不需要保存在用例
     @RequestMapping("/saveResult.do")
@@ -92,24 +109,7 @@ public class CaseDetailController {
         return iCaseDetailService.forbidden(idList,status);
     }
 
-    @RequestMapping("/list.do")
-    @ResponseBody
-    public R list(Map<String, Object> map){
-        if (map.size() == 0){
-            return R.error("前端传参错误");
-        }
-        Object limit = map.get("limit");
-        if (null == limit || 0 == Integer.parseInt(limit.toString())) {
-            return R.error("每页条数不能为空");
-        }
-        Query query = new Query(map);
-        int total = iCaseDetailService.count(query);
-        List<CaseDetailVo> voList =  iCaseDetailService.caseDetailList(query);
-        PageUtils pageUtils = new PageUtils(voList,
-                total);
-        R r = new R().put("data",pageUtils);
-        return r;
-    }
+
 
 
 }

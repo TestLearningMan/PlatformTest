@@ -336,16 +336,31 @@
         select id,product_id,function_id,level,img_path,precondition,title,exc_step,Exp_results,
         remarks,status,apitest_caseid,unittest_caseid,uitest_caseid,backdev_id,relate_demand,frontdev_id,productman_id,modified_time,modifier_id
         from tp_case_casedetail
-        <trim prefix="where" prefixOverrides="and">
-            <if test="id != 0"> and id = #{id} </if>
-            <if test="title != null">and title = #{title}</if>
-            <if test="functionId != null">and function_id = #{functionId}</if>
-            <if test="product_id != null">and product_id = #{productId}</if>
-            <if test="status != null">and status = #{status}</if>
-            <if test="type != null">and type = #{type}</if>
-        </trim>) c
+        <where>
+          <if  test="_parameter != null"> id = #{id,jdbcType=BIGINT}</if>
+        </where>) c
         left join tp_case_product p on c.product_id = p.id)
         left join  tp_case_function f on c.function_id = f.id
+  </select>
+  <select id="getCaseList"  parameterType="java.util.Map" resultType="com.platform.testcase.vo.CaseDetailVo">
+    select c.id,c.product_id,p.product_name,c.function_id,f.function_name,c.level,c.img_path,c.precondition,c.title,c.exc_step,
+    c.Exp_results,c.remarks,c.status,c.apitest_caseid,c.unittest_caseid,c.uitest_caseid,c.backdev_id,c.relate_demand,c.frontdev_id,
+    c.productman_id,c.modified_time            ,c.modifier_id
+    from ((
+    select id,product_id,function_id,level,img_path,precondition,title,exc_step,Exp_results,
+    remarks,status,apitest_caseid,unittest_caseid,uitest_caseid,backdev_id,relate_demand,frontdev_id,productman_id,modified_time,modifier_id
+    from tp_case_casedetail
+    <trim prefix="where" prefixOverrides="and">
+      <if test="title != null">and title like CONCAT('%',#{title},'%')</if>
+      <if test="functionId != null">and function_id = #{functionId}</if>
+      <if test="product_id != null">and product_id = #{productId}</if>
+      <if test="status != null">and status = #{status}</if>
+      <if test="type != null">and type = #{type}</if>
+    </trim>) c
+    left join tp_case_product p on c.product_id = p.id)
+    left join  tp_case_function f on c.function_id = f.id
+    order by c.product_id,c.function_id
+    limit #{offset},#{limit}
   </select>
   <select id="count" parameterType="java.util.Map" resultType="java.lang.Integer">
     select count(1)
