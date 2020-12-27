@@ -63,7 +63,7 @@ public class FunctionServiceImpl implements IFunctionService {
                         errMsg.append("该功能已关联测试用例，不允许删除\n");
                     }
                     break;
-                case "6504":
+                case "6502":
                     if (result.getId() > 1){
                         errMsg.append("该功能有子功能，不允许删除\n");
                     }

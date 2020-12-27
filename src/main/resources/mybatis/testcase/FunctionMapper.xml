@@ -177,7 +177,7 @@
   <select id="checkAssociated" parameterType="java.lang.Long" resultMap="AssociateResultMap" >
     <!--> 查找出关联的测试用例<-->
     SELECT
-    DISTINCT count(1) id,'6501' type,'关联的测试用例' name
+        DISTINCT count(1) id,'6501' type,'关联的测试用例' name
     FROM
     tp_case_casedetail
     <trim prefix="where">
@@ -188,7 +188,7 @@
     union
     <!--> 查找出关联的子功能的数量<-->
     select
-    count(1) id , '6504' type,'关联的子功能' function_name
+    count(1) id , '6502' type,'关联的子功能' function_name
     from
     tp_case_function
     <where>
