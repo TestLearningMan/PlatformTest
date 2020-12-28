@@ -5,10 +5,12 @@ import com.platform.testcase.handler.AssociateResultHandler;
 import com.platform.testcase.dao.ProductMapper;
 import com.platform.testcase.pojo.AssociateResult;
 import com.platform.testcase.pojo.Product;
+import com.platform.testcase.service.IDocNumberService;
 import com.platform.testcase.service.IProductService;
 import com.platform.testcase.utils.BaseTypeUtils;
 import com.platform.testcase.utils.IdGenerator;
 import com.platform.testcase.vo.ProductVo;
+import com.platform.testcase.common.Const;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import com.bootdo.common.utils.*;
@@ -24,15 +26,21 @@ public class ProductServiceImpl implements IProductService {
     @Autowired
     ProductMapper productMapper;
 
+    @Autowired
+    IDocNumberService iDocNumberService;
+
     public R save(Product product){
         if (productMapper.isExist(product.getProductName()) >0){
             return R.error(-1,"产品名称已存在");
         }
-        if (StringUtils.isBlank(product.getId().toString())){
+        product.setModifierId(ShiroUtils.getUserId());
+        if (product.getId() == -1){
             product.setId(IdGenerator.getId());
+            String no = iDocNumberService.updateNumber(product.getProductNumber()
+                    ,Const.serviceType.PRODUCT.getCode());
+            product.setProductNumber(no);
             product.setStatus(1);
             product.setCreatorId(ShiroUtils.getUserId());
-            product.setModifierId(ShiroUtils.getUserId());
             int result = productMapper.insertSelective(product);
             if (result > 0){
                 return R.ok("新增产品成功");
@@ -41,7 +49,6 @@ public class ProductServiceImpl implements IProductService {
 
         }
         else{
-            product.setModifierId(ShiroUtils.getUserId());
             int result = productMapper.save(product);
             if (result > 0){
                 return R.ok("保存产品成功");

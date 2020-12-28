@@ -26,6 +26,9 @@ public class ProductController {
         if (null ==product || StringUtils.isBlank(product.getProductName())){
             return R.error(-1,"产品名称不能为空");
         }
+        if (StringUtils.isBlank(product.getProductNumber())){
+            return R.error(-1,"产品编号不能为空");
+        }
         return iProductService.save(product);
     }
 

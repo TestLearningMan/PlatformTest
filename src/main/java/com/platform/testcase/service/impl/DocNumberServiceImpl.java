@@ -17,6 +17,10 @@ public class DocNumberServiceImpl implements IDocNumberService {
 
     public String getNumberForAdd(int code){
         DocNumber docNumber =  docNumberMapper.selectByCode(code);
+        if (docNumber == null){
+            //查询结果为空，说明业务类型传参错误
+            return "";
+        }
         String number = new StringBuilder().append(docNumber.getDocPrefix())
                 .append(docNumber.getDocNumber()).toString();
         return number;

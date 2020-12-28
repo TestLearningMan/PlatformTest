@@ -4,6 +4,7 @@
   <resultMap id="BaseResultMap" type="com.platform.testcase.pojo.Product" >
     <constructor >
       <arg column="id" jdbcType="BIGINT" javaType="java.lang.Long" />
+      <arg column="product_number" jdbcType="VARCHAR" javaType="java.lang.String" />
       <arg column="product_name" jdbcType="VARCHAR" javaType="java.lang.String" />
       <arg column="productman_id" jdbcType="BIGINT" javaType="java.lang.Long" />
       <arg column="status" jdbcType="INTEGER" javaType="java.lang.Integer" />
@@ -21,10 +22,10 @@
     </constructor>
   </resultMap>
   <insert id="insert" parameterType="com.platform.testcase.pojo.Product" >
-    insert into tp_case_product (id, product_name, productman_id,
+    insert into tp_case_product (id, product_number,product_name, productman_id,
       status, create_time, modified_time,
       creator_id, modifier_id)
-    values (#{id,jdbcType=BIGINT}, #{productName,jdbcType=VARCHAR}, #{productmanId,jdbcType=BIGINT},
+    values (#{id,jdbcType=BIGINT}, #{productNumber,jdbcType=VARCHAR},#{productName,jdbcType=VARCHAR}, #{productmanId,jdbcType=BIGINT},
       #{status,jdbcType=INTEGER},now(),now(),
       #{creatorId,jdbcType=BIGINT}, #{modifierId,jdbcType=BIGINT})
   </insert>
@@ -34,7 +35,10 @@
       <if test="id != null" >
         id,
       </if>
-      <if test="productName != null" >
+      <if test="productNumber != null and productNumber != ''">
+        product_Number,
+      </if>
+      <if test="productName != null and productName != ''" >
         product_name,
       </if>
       <if test="productmanId != null" >
@@ -56,7 +60,10 @@
       <if test="id != null" >
         #{id,jdbcType=BIGINT},
       </if>
-      <if test="productName != null" >
+      <if test="productNumber != null and productNumber != ''" >
+        #{productNumber,jdbcType=VARCHAR},
+      </if>
+      <if test="productName != null and productName != ''" >
         #{productName,jdbcType=VARCHAR},
       </if>
       <if test="productmanId != null" >
@@ -76,7 +83,7 @@
     </trim>
   </insert>
   <sql id="Base_Column_List" >
-    id, product_name, productman_id, status, create_time, modified_time, creator_id, modifier_id
+    id, product_number,product_name, productman_id, status, create_time, modified_time, creator_id, modifier_id
   </sql>
   <select id="isExist"  parameterType="String" resultType="int">
     select
@@ -88,7 +95,10 @@
     update
     tp_case_product
     <trim prefix="set" >
-      <if test="productName != null">
+      <if test="productNumber != null and productNumber !=''">
+        product_number=#{productNumber},
+      </if>
+      <if test="productName != null and productName !=''">
         product_name=#{productName},
       </if>
       <if test="productmanId != null">
@@ -122,7 +132,10 @@
     inner join (select id,name from t_platform_user) u
     on p.productman_id = u.id
     <trim prefix="where" prefixOverrides="and">
-      <if test="productName != null ">
+      <if test="productNumber != '' and productNumber !=null">
+        and p.product_number = #{productNumber}
+      </if>
+      <if test="productName != null and productName != ''">
         and p.product_name = #{productName}
       </if>
       <if test="status != null"> and p.status = #{status} </if>
@@ -130,12 +143,13 @@
     </trim>
   </select>
   <select id="list" resultType="com.platform.testcase.vo.ProductVo" >
-    select p.id,p.product_name,p.status,u.productman
+    select p.id,p.product_number,p.product_name,p.status,u.productman
     from tp_case_product p
     inner join (select id,`name` productman from t_platform_user ) u
     on p.productman_id = u.id
     <trim prefix="where" prefixOverrides="and">
       <if  test="id != null">and p.id = #{id} </if>
+      <if  test="productNumber != null and productNumber != ''">and p.product_number = #{productNumber}</if>
       <if  test="productman != null">and u.productman_id = #{productmanId}</if>
       <if  test="status != null">and p.status = #{status} </if>
     </trim>

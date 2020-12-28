@@ -5,6 +5,10 @@ import java.util.Date;
 public class Product {
     private Long id;
 
+    private String productNumber;
+
+
+
     private String productName;
 
     private Long productmanId;
@@ -19,8 +23,9 @@ public class Product {
 
     private Long modifierId;
 
-    public Product(Long id, String productName, Long productmanId, Integer status, Date createTime, Date modifiedTime, Long creatorId, Long modifierId) {
+    public Product(Long id, String productNumber,String productName, Long productmanId, Integer status, Date createTime, Date modifiedTime, Long creatorId, Long modifierId) {
         this.id = id;
+        this.productNumber=productNumber;
         this.productName = productName;
         this.productmanId = productmanId;
         this.status = status;
@@ -29,6 +34,15 @@ public class Product {
         this.creatorId = creatorId;
         this.modifierId = modifierId;
     }
+
+    public String getProductNumber() {
+        return productNumber;
+    }
+
+    public void setProductNumber(String productNumber) {
+        this.productNumber = productNumber;
+    }
+
 
     public Product() {
         super();

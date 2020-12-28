@@ -17,6 +17,9 @@ public class BaseNumberController {
     @ResponseBody
     public R getNumber(int code){
         String number = iDocNumberService.getNumberForAdd(code);
+        if (number == ""){
+            return R.error("业务类型不存在");
+        }
         return R.ok().put("data",number);
     }
 
