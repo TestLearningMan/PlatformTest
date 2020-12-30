@@ -7,8 +7,6 @@ public class Product {
 
     private String productNumber;
 
-
-
     private String productName;
 
     private Long productmanId;

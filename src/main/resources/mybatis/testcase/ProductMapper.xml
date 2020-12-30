@@ -32,53 +32,53 @@
   <insert id="insertSelective" parameterType="com.platform.testcase.pojo.Product" >
     insert into tp_case_product
     <trim prefix="(" suffix=")" suffixOverrides="," >
-      <if test="id != null" >
+      <if test="record.id != null" >
         id,
       </if>
-      <if test="productNumber != null and productNumber != ''">
+      <if test="record.productNumber != null and record.productNumber != ''">
         product_Number,
       </if>
-      <if test="productName != null and productName != ''" >
+      <if test="record.productName != null and record.productName != ''" >
         product_name,
       </if>
-      <if test="productmanId != null" >
+      <if test="record.productmanId != null" >
         productman_id,
       </if>
-      <if test="status != null" >
+      <if test="record.status != null" >
         status,
       </if>
       create_time,
       modified_time,
-      <if test="creatorId != null" >
+      <if test="record.creatorId != null" >
         creator_id,
       </if>
-      <if test="modifierId != null" >
+      <if test="record.modifierId != null" >
         modifier_id,
       </if>
     </trim>
     <trim prefix="values (" suffix=")" suffixOverrides="," >
-      <if test="id != null" >
-        #{id,jdbcType=BIGINT},
+      <if test="record.id != null" >
+        #{record.id,jdbcType=BIGINT},
       </if>
-      <if test="productNumber != null and productNumber != ''" >
-        #{productNumber,jdbcType=VARCHAR},
+      <if test="record.productNumber != null and record.productNumber != ''" >
+        #{record.productNumber,jdbcType=VARCHAR},
       </if>
-      <if test="productName != null and productName != ''" >
-        #{productName,jdbcType=VARCHAR},
+      <if test="record.productName != null and record.productName != ''" >
+        #{record.productName,jdbcType=VARCHAR},
       </if>
-      <if test="productmanId != null" >
-        #{productmanId,jdbcType=BIGINT},
+      <if test="record.productmanId != null" >
+        #{record.productmanId,jdbcType=BIGINT},
       </if>
-      <if test="status != null" >
-        #{status,jdbcType=INTEGER},
+      <if test="record.status != null" >
+        #{record.status,jdbcType=INTEGER},
       </if>
       now(),
       now(),
-      <if test="creatorId != null" >
-        #{creatorId,jdbcType=BIGINT},
+      <if test="record.creatorId != null" >
+        #{record.creatorId,jdbcType=BIGINT},
       </if>
-      <if test="modifierId != null" >
-        #{modifierId,jdbcType=BIGINT},
+      <if test="record.modifierId != null" >
+        #{record.modifierId,jdbcType=BIGINT},
       </if>
     </trim>
   </insert>

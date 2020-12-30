@@ -34,9 +34,9 @@
         </if>
     </trim>
     </select>
-    <update id="updateNumber" parameterType="java.lang.Long">
+    <update id="updateNumber" >
     update tp_bs_docNumber
-        set doc_number = #{number}
-    where   doc_doc = #{docCode}
+        set doc_number = #{docNumber}
+    where   doc_code = #{docCode}
     </update>
 </mapper>
