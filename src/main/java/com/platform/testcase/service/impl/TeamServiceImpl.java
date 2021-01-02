@@ -1,8 +1,10 @@
 package com.platform.testcase.service.impl;
 
+import com.platform.testcase.common.Const;
 import com.platform.testcase.dao.TeamMapper;
 import com.platform.testcase.pojo.AssociateResult;
 import com.platform.testcase.pojo.Team;
+import com.platform.testcase.service.IDocNumberService;
 import com.platform.testcase.service.ITeamService;
 import com.google.common.base.Splitter;
 import com.platform.testcase.dao.TeamMapper;
@@ -16,6 +18,9 @@ import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import com.bootdo.common.utils.*;
+
+import java.io.UnsupportedEncodingException;
+import java.net.URLDecoder;
 import java.util.List;
 import java.util.Map;
 
@@ -24,10 +29,15 @@ public class TeamServiceImpl implements ITeamService {
     @Autowired
     TeamMapper teamMapper;
 
+    @Autowired
+    IDocNumberService iDocNumberService;
+
     public R save(Team team){
         int result = 0;
         //团队ID为空，则新增团队
         if (null == team.getId() || team.getId() == 0 ){
+            team.setTeamNumber(iDocNumberService.updateNumber(team.getTeamNumber()
+                    ,Const.serviceType.TEAM.getCode()));
             team.setId(IdGenerator.getId());
             team.setCreatorId(ShiroUtils.getUserId());
             team.setModifierId(ShiroUtils.getUserId());
@@ -85,7 +95,10 @@ public class TeamServiceImpl implements ITeamService {
         }
         return  R.ok("团队状态更新成功");
     }
-
+    public Team decode(Team team,String code) throws UnsupportedEncodingException{
+        team.setTeamName(URLDecoder.decode(team.getTeamName(),code));
+        return team;
+    }
     private String checkAssociation(List<Long> idList){
         List<AssociateResult> resultList= teamMapper.checkAssociated(idList);
         if (resultList == null || resultList.size() == 0){
@@ -110,6 +123,7 @@ public class TeamServiceImpl implements ITeamService {
 
         return errMsg.toString();
     }
+
 
 
 

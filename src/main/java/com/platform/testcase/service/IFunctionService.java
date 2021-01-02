@@ -3,6 +3,7 @@ package com.platform.testcase.service;
 import com.bootdo.common.utils.R;
 import com.platform.testcase.pojo.Function;
 
+import java.io.UnsupportedEncodingException;
 import java.util.List;
 import java.util.Map;
 
@@ -11,4 +12,5 @@ public interface IFunctionService {
     public void forbidden(Map<String,Object> map);
     public List<Function> list(Map<String,Object> map);
     public R delete(Long id);
+    public Function decode(Function function,String code) throws UnsupportedEncodingException;
 }

@@ -15,12 +15,13 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
 
+import java.io.UnsupportedEncodingException;
 import java.util.List;
 import java.util.Map;
 
 @RequestMapping("/testplatform/team")
 @Controller
-public class TeamController {
+public class  TeamController {
     @Autowired
     TeamMapper teamMapper;
 
@@ -30,13 +31,19 @@ public class TeamController {
 
     @RequestMapping("/save.do")
     @ResponseBody
-    public R addTeam(Team team){
+    public R save(Team team){
         if (null == team || StringUtils.isBlank(team.getTeamName()) ){
             return R.error("团队信息或者团队名称不能为空");
         }
         if (teamMapper.isExist(team.getTeamName()) == 1){
             return R.error("团队名称已存在");
         }
+        try{
+            team = iTeamService.decode(team,"UTF-8");
+        }catch (UnsupportedEncodingException e){
+            return R.error(e.getMessage());
+        }
+
         return iTeamService.save(team);
     }
 

@@ -4,6 +4,7 @@
   <resultMap id="BaseResultMap" type="com.platform.testcase.pojo.Team">
     <constructor>
       <idArg column="id" javaType="java.lang.Long" jdbcType="BIGINT" />
+      <arg column="team_number" javaType="java.lang.String" jdbcType="VARCHAR" />
       <arg column="team_name" javaType="java.lang.String" jdbcType="VARCHAR" />
       <arg column="status" javaType="java.lang.Boolean" jdbcType="BIT" />
       <arg column="create_time" javaType="java.util.Date" jdbcType="TIMESTAMP" />
@@ -20,7 +21,7 @@
     </constructor>
   </resultMap>
   <sql id="Base_Column_List">
-    id, team_name, status, create_time, modified_time, creator_id, modifier_id
+    id,team_number, team_name, status, create_time, modified_time, creator_id, modifier_id
   </sql>
   <select id="selectByPrimaryKey" parameterType="java.lang.Long" resultMap="BaseResultMap">
     select 
@@ -33,10 +34,10 @@
     where id = #{id,jdbcType=BIGINT}
   </delete>
   <insert id="insert" parameterType="com.platform.testcase.pojo.Team">
-    insert into tp_case_team (id, team_name, status, 
+    insert into tp_case_team (id,team_number, team_name, status,
       create_time, modified_time, creator_id, 
       modifier_id)
-    values (#{id,jdbcType=BIGINT}, #{teamName,jdbcType=VARCHAR}, #{status,jdbcType=BIT},
+    values (#{id,jdbcType=BIGINT},#{teamNumbeer,jdbcType=VARCHAR}, #{teamName,jdbcType=VARCHAR}, #{status,jdbcType=BIT},
     now(),now(), #{creatorId,jdbcType=BIGINT}, #{modifierId,jdbcType=BIGINT})
   </insert>
   <insert id="insertSelective" parameterType="com.platform.testcase.pojo.Team">
@@ -45,7 +46,10 @@
       <if test="id != null">
         id,
       </if>
-      <if test="teamName != null">
+      <if test="teamNumber != null and teamNumber != ''">
+        team_number,
+      </if>
+      <if test="teamName != null and teamName != ''">
         team_name,
       </if>
       <if test="status != null">
@@ -68,7 +72,10 @@
       <if test="id != null">
         #{id,jdbcType=BIGINT},
       </if>
-      <if test="teamName != null">
+      <if test="teamNumber != null and teamNumber != ''">
+        #{teamNumber,jdbcType=VARCHAR},
+      </if>
+      <if test="teamName != null and teamName != ''">
         #{teamName,jdbcType=VARCHAR},
       </if>
       <if test="status != null">
@@ -87,6 +94,9 @@
   <update id="updateByPrimaryKeySelective" parameterType="com.platform.testcase.pojo.Team">
     update tp_case_team
     <set>
+      <if test="teamNumber != null and teamNumber != ''">
+        team_number = #{teamNumber,jdbcType=VARCHAR},
+      </if>
       <if test="teamName != null">
         team_name = #{teamName,jdbcType=VARCHAR},
       </if>
@@ -108,7 +118,8 @@
   </update>
   <update id="updateByPrimaryKey" parameterType="com.platform.testcase.pojo.Team">
     update tp_case_team
-    set team_name = #{teamName,jdbcType=VARCHAR},
+    set team_number = #{teamNumber,jdbcType=VARCHAR},
+      team_name = #{teamName,jdbcType=VARCHAR},
       status = #{status,jdbcType=BIT},
       create_time = #{createTime,jdbcType=TIMESTAMP},
       modified_time = now(),
@@ -137,13 +148,16 @@
     from tp_case_team
     <trim prefix="where" suffixOverrides="and">
       <if test="id != null">
-        id = #{id} and
+        id = #{id,jdbcType=BIGINT} and
       </if>
-      <if test="teamName != null" >
-        team_name = #{teamName} and
+      <if test="teamNumber != null and teamNumber != ''">
+        team_number=#{teamNumber,jdbcType=VARCHAR} and
+      </if>
+      <if test="teamName != null and teamName != ''" >
+        team_name = #{teamName,jdbcType=VARCHAR} and
       </if>
       <if test="status != null">
-        status = #{status} and
+        status = #{status,jdbcType=BIT} and
       </if>
     </trim>
   </select>
@@ -152,13 +166,16 @@
     from tp_case_team
     <trim prefix="where" suffixOverrides="and">
       <if test="id !=null">
-        id = #{id} and
+        id = #{id,jdbcType=BIGINT} and
+      </if>
+      <if test="teamNumber != null and teamNumber != ''">
+        team_number=#{teamNumber,jdbcType=VARCHAR} and
       </if>
       <if test="teamName != null">
-        team_name = #{teamName} and
+        team_name = #{teamName,jdbcType=VARCHAR} and
       </if>
       <if test="status">
-        status = #{status} and
+        status = #{status,jdbcType=BIT} and
       </if>
       order by team_name
       <if test="limit != null and offset != null" >

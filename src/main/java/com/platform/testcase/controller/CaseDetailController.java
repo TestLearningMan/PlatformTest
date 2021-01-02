@@ -19,6 +19,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
 
+import java.io.UnsupportedEncodingException;
 import java.util.List;
 import java.util.Map;
 
@@ -36,6 +37,12 @@ public class CaseDetailController {
         if ((int)verify.get("code") != 0){
             return verify;
         }
+        try{
+            caseDetail = iCaseDetailService.decode(caseDetail,"UTF-8");
+        } catch (UnsupportedEncodingException e){
+            return R.error(e.getMessage());
+        }
+
         if (caseDetail.getId() == -1){
             caseDetail.setCreatorId(ShiroUtils.getUserId());
             caseDetail.setId(IdGenerator.getId());

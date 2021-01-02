@@ -33,15 +33,19 @@ public class DocNumberServiceImpl implements IDocNumberService {
         Matcher matcher = r.matcher(No);
         DocNumber no = docNumberMapper.selectByCode(code);
         Long currentNumber = no.getDocNumber();
-        if (!matcher.find() || currentNumber.equals(number) || currentNumber > number){
+        if (!matcher.find()){
             //单据编号不支持自定义，格式不正确时，直接返回最新的单据编号
-            // 单据编号与最新的编号一致时，说明编号未被使用，直接返回
-            //单据编号比最新的编号还大时，说明编号未被使用，直接返回
             docNumberMapper.updateNumber(no.getDocNumber()+1,code);
             DocNumber = new StringBuilder(no.getDocPrefix()).append(no.getDocNumber()).toString();
-        }else {
-            //单据编号比最新编号要小时，需要校验单据编号是否已被使用
-            number =Long.valueOf(matcher.group(0)) ;
+            return DocNumber;
+        }
+        number = Long.valueOf(matcher.group(0));
+        if ( currentNumber < number){
+            //保存的编号比最新的编号还大时，说明是自定义的编号，默认为编号未被使用，直接返回
+            DocNumber = new StringBuilder(no.getDocPrefix()).append(number).toString();
+        }
+        else {
+            //自定义编号小于等于最新编号时，需要校验单据编号是否已被使用
             while (docNumberMapper.isExist(number,code) != 0){
                 number+=1;
             }

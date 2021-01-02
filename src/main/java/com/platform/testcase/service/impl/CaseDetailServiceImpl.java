@@ -9,9 +9,12 @@ import com.platform.testcase.service.IDocNumberService;
 import com.platform.testcase.service.iCaseDetailService;
 import com.platform.testcase.vo.CaseDetailVo;
 import org.apache.commons.lang.StringUtils;
+import org.apache.ibatis.annotations.Case;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import java.io.UnsupportedEncodingException;
+import java.net.URLDecoder;
 import java.util.List;
 import java.util.Map;
 
@@ -136,9 +139,6 @@ public class CaseDetailServiceImpl implements iCaseDetailService {
         return caseDetailMapper.count(map);
     }
 
-
-
-
     private String checkAssociation(List<Long> idList){
         List<AssociateResult> resultList= caseDetailMapper.checkAssociated(idList);
         if (resultList == null || resultList.size() == 0){
@@ -161,8 +161,16 @@ public class CaseDetailServiceImpl implements iCaseDetailService {
         return errMsg.toString();
     }
 
-
-
+    public CaseDetail decode(CaseDetail caseDetail,String code) throws UnsupportedEncodingException{
+        caseDetail.setExcStep(URLDecoder.decode(caseDetail.getExcStep(),code));
+        caseDetail.setExpResults(URLDecoder.decode(caseDetail.getExpResults(),code));
+        caseDetail.setImgPath(URLDecoder.decode(caseDetail.getImgPath(),code));
+        caseDetail.setPrecondition(URLDecoder.decode(caseDetail.getPrecondition(),code));
+        caseDetail.setRelateDemand(URLDecoder.decode(caseDetail.getRelateDemand(),code));
+        caseDetail.setRemarks(URLDecoder.decode(caseDetail.getRemarks(),code));
+        caseDetail.setTitle(URLDecoder.decode(caseDetail.getTitle(),code));
+        return caseDetail;
+    }
 
 
 }

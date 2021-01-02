@@ -5,6 +5,8 @@ import java.util.Date;
 public class Team {
     private Long id;
 
+    private String teamNumber;
+
     private String teamName;
 
     private Boolean status;
@@ -17,8 +19,9 @@ public class Team {
 
     private Long modifierId;
 
-    public Team(Long id, String teamName, Boolean status, Date createTime, Date modifiedTime, Long creatorId, Long modifierId) {
+    public Team(Long id, String teamNumber,String teamName, Boolean status, Date createTime, Date modifiedTime, Long creatorId, Long modifierId) {
         this.id = id;
+        this.teamNumber = teamNumber;
         this.teamName = teamName;
         this.status = status;
         this.createTime = createTime;
@@ -27,8 +30,17 @@ public class Team {
         this.modifierId = modifierId;
     }
 
+
     public Team() {
         super();
+    }
+
+    public String getTeamNumber() {
+        return teamNumber;
+    }
+
+    public void setTeamNumber(String teamNumber) {
+        this.teamNumber = teamNumber;
     }
 
     public Long getId() {

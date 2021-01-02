@@ -15,4 +15,5 @@ public interface ITeamMember {
     public R batchDelete(List<Long> testerIds,Long teamId);
     public int count(HashMap<String,Object> map);
     public List<TeamMemberVo> list(Map<String,Object> map);
+
 }

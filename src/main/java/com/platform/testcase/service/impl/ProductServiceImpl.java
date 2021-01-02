@@ -15,6 +15,8 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import com.bootdo.common.utils.*;
 
+import java.io.UnsupportedEncodingException;
+import java.net.URLDecoder;
 import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.List;
@@ -33,7 +35,7 @@ public class ProductServiceImpl implements IProductService {
         if (productMapper.isExist(product.getProductName()) >0){
             return R.error(-1,"产品名称已存在");
         }
-        product.setModifierId(ShiroUtils.getUserId());
+        product.setProductName(URLDecoder.decode(product.getProductName()));
         if (product.getId() == -1){
             product.setId(IdGenerator.getId());
             String no = iDocNumberService.updateNumber(product.getProductNumber()
@@ -57,7 +59,6 @@ public class ProductServiceImpl implements IProductService {
             }
         }
 
-
     public R batchDelete(String productIds){
         List<String> idListStr = Splitter.on(",").splitToList(productIds);
         List<Long> idList= BaseTypeUtils.strToLong(idListStr);
@@ -66,8 +67,8 @@ public class ProductServiceImpl implements IProductService {
         int successNum = idList.size();
         int failNum = totalNum - successNum;
         StringBuilder msg = new StringBuilder();
-        msg.append("操作成功\n").append("成功删除产品").append(successNum)
-                .append("个\n").append(failNum).append("个产品删除失败,")
+        msg.append("操作成功\\n\\r").append("成功删除产品").append(successNum)
+                .append("个\\n\\r").append(failNum).append("个产品删除失败,")
                 .append(errMsg);
         R r = R.ok();
         if (successNum >0 ){
@@ -120,4 +121,11 @@ public class ProductServiceImpl implements IProductService {
 
         return errMsg.toString();
     }
+
+    public  Product decode(Product product,String code) throws UnsupportedEncodingException {
+        product.setProductName(URLDecoder.decode(product.getProductName(),code));
+        return product;
+    } ;
+
+
 }

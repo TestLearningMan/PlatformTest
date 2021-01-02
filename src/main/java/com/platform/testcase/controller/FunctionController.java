@@ -5,12 +5,15 @@ import com.bootdo.common.utils.R;
 import com.bootdo.common.utils.ShiroUtils;
 import com.google.common.base.Splitter;
 import com.platform.testcase.pojo.Function;
+import com.platform.testcase.service.IFunctionService;
 import com.platform.testcase.service.impl.FunctionServiceImpl;
 import org.apache.commons.lang.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.ResponseBody;
+
+import java.io.UnsupportedEncodingException;
 import java.util.List;
 import java.util.Map;
 
@@ -18,7 +21,7 @@ import java.util.Map;
 @RequestMapping("/testplatform/function")
 public class FunctionController {
     @Autowired
-    FunctionServiceImpl functionService;
+    IFunctionService iFunctionService;
 
     /**
      *
@@ -33,7 +36,12 @@ public class FunctionController {
         }
         function.setModifierId(ShiroUtils.getUserId());
         function.setCreatorId(ShiroUtils.getUserId());
-        return functionService.save(function);
+        try{
+            function = iFunctionService.decode(function,"UTF-8");
+        }catch (UnsupportedEncodingException e){
+            return R.error(e.getMessage());
+        }
+        return iFunctionService.save(function);
     }
 
     @RequestMapping("/forbidden.do")
@@ -48,7 +56,7 @@ public class FunctionController {
     @RequestMapping("/list.do")
     @ResponseBody
     public R list(Map<String,Object> map){
-        List<Function> lists = functionService.list(map);
+        List<Function> lists = iFunctionService.list(map);
         R r = new R();
         r.put("data",lists);
         return r;
@@ -60,7 +68,7 @@ public class FunctionController {
         if (id == null){
             return R.error("请选择需要删除的功能");
         }
-        return functionService.delete(id);
+        return iFunctionService.delete(id);
     }
 
 

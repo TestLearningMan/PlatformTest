@@ -9,6 +9,8 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.*;
 import com.bootdo.common.utils.*;
+
+import java.io.UnsupportedEncodingException;
 import java.util.List;
 import java.util.Map;
 
@@ -28,6 +30,11 @@ public class ProductController {
         }
         if (StringUtils.isBlank(product.getProductNumber())){
             return R.error(-1,"产品编号不能为空");
+        }
+        try{
+            product = iProductService.decode(product,"UTF-8");
+        }catch (UnsupportedEncodingException e){
+            return R.error(e.getMessage());
         }
         return iProductService.save(product);
     }

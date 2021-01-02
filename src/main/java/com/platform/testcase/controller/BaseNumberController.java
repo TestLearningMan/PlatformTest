@@ -5,6 +5,7 @@ import com.platform.testcase.service.IDocNumberService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.ResponseBody;
 
 @RequestMapping("/testplatform/baseNumber")
@@ -13,7 +14,7 @@ public class BaseNumberController {
     @Autowired
     IDocNumberService iDocNumberService;
 
-    @RequestMapping("/getNumber.do")
+    @RequestMapping(value = "/getNumber.do",method = RequestMethod.GET)
     @ResponseBody
     public R getNumber(int code){
         String number = iDocNumberService.getNumberForAdd(code);
